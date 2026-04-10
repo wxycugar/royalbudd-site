@@ -1,15 +1,33 @@
 ---
 // src/components/Hero.astro
+// 这里我们引入 Sanity 的客户端工具（如果之前没装，等下可能需要装一下）
+import { sanityClient } from "sanity:client";
+
+// 1. 写查询语句：去数据库找 type 为 'homePage' 的文档，把它里面图片的真实网址拿出来
+const query = `*[_type == "homePage"][0] {
+  heroTitle,
+  "imageUrl": heroBackgroundImage.asset->url
+}`;
+
+// 2. 执行查询，拿到数据
+const data = await sanityClient.fetch(query);
+
+// 3. 准备一个默认的背景色，以防万一图片没加载出来
+const bgImageStyle = data?.imageUrl ? `url('${data.imageUrl}')` : 'none';
 ---
 
 <section class="relative bg-gray-900 text-white pt-32 pb-40 overflow-hidden">
   <div class="absolute inset-0 z-0">
     <div class="absolute inset-0 bg-gray-900/70 z-10"></div>
-    <img 
-      src="/images/factory-hero.jpg" 
-      alt="Royalbudd Global Manufacturing Facility" 
-      class="w-full h-full object-cover"
-    />
+    {data?.imageUrl ? (
+       <img 
+        src={data.imageUrl} 
+        alt="Royalbudd Global Manufacturing Facility" 
+        class="w-full h-full object-cover"
+      />
+    ) : (
+      <div class="w-full h-full bg-gray-800"></div>
+    )}
   </div>
 
   <div class="relative z-20 container mx-auto px-6 md:px-12">
@@ -19,8 +37,7 @@
       </p>
       
       <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-8">
-        Global Manufacturing,<br />
-        <span class="text-[#D4AF37]">Localized Innovation.</span>
+        {data?.heroTitle ? data.heroTitle : "Global Manufacturing, Localized Innovation."}
       </h1>
       
       <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl leading-relaxed">
@@ -28,16 +45,10 @@
       </p>
       
       <div class="flex flex-col sm:flex-row gap-5">
-        <a 
-          href="/manufacturing" 
-          class="inline-block text-center bg-[#D4AF37] text-gray-900 font-bold py-4 px-10 rounded-sm hover:bg-[#C5A028] transition duration-300 shadow-lg"
-        >
+        <a href="/manufacturing" class="inline-block text-center bg-[#D4AF37] text-gray-900 font-bold py-4 px-10 rounded-sm hover:bg-[#C5A028] transition duration-300 shadow-lg">
           Explore Our Capabilities
         </a>
-        <a 
-          href="/contact" 
-          class="inline-block text-center border-2 border-[#D4AF37] text-[#D4AF37] font-bold py-4 px-10 rounded-sm hover:bg-[#D4AF37] hover:text-gray-900 transition duration-300"
-        >
+        <a href="/contact" class="inline-block text-center border-2 border-[#D4AF37] text-[#D4AF37] font-bold py-4 px-10 rounded-sm hover:bg-[#D4AF37] hover:text-gray-900 transition duration-300">
           Request Factory Audit
         </a>
       </div>
