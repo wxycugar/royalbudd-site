@@ -1,0 +1,46 @@
+---
+// src/components/Hero.astro
+---
+
+<section class="relative bg-gray-900 text-white pt-32 pb-40 overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    <div class="absolute inset-0 bg-gray-900/70 z-10"></div>
+    <img 
+      src="/images/factory-hero.jpg" 
+      alt="Royalbudd Global Manufacturing Facility" 
+      class="w-full h-full object-cover"
+    />
+  </div>
+
+  <div class="relative z-20 container mx-auto px-6 md:px-12">
+    <div class="max-w-4xl">
+      <p class="text-[#D4AF37] font-bold tracking-[0.2em] uppercase mb-6 text-sm md:text-base">
+        China R&D Hub &bull; SE Asia Tax-Free Production
+      </p>
+      
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-8">
+        Global Manufacturing,<br />
+        <span class="text-[#D4AF37]">Localized Innovation.</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl leading-relaxed">
+        Royalbudd: Defining Bag Aesthetics through 20 Years of Global Craftsmanship. We empower global brands with agile supply chains and scalable bases in Indonesia and Bangladesh.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-5">
+        <a 
+          href="/manufacturing" 
+          class="inline-block text-center bg-[#D4AF37] text-gray-900 font-bold py-4 px-10 rounded-sm hover:bg-[#C5A028] transition duration-300 shadow-lg"
+        >
+          Explore Our Capabilities
+        </a>
+        <a 
+          href="/contact" 
+          class="inline-block text-center border-2 border-[#D4AF37] text-[#D4AF37] font-bold py-4 px-10 rounded-sm hover:bg-[#D4AF37] hover:text-gray-900 transition duration-300"
+        >
+          Request Factory Audit
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
