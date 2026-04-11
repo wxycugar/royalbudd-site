@@ -6,23 +6,23 @@ import TrustBar from '../components/TrustBar.astro';
 import GlobalFootprint from '../components/GlobalFootprint.astro'; // <-- 就是缺了这句
 import CoreCategories from '../components/CoreCategories.astro'; // <--- 新增这行
 import ManufacturingStrength from '../components/ManufacturingStrength.astro'; // <--- 新增这行
+import FinalCTA from '../components/FinalCTA.astro'; // <--- 新增
+import Footer from '../components/Footer.astro';     // <--- 新增
 
 // 这里可以定义首页的 SEO 标题
 const pageTitle = "Royalbudd | Global Bag Manufacturing - China R&D & SE Asia Production";
 ---
 
 <Layout title={pageTitle}>
- <main>
+  <main>
     <Hero />
     <TrustBar />
     <GlobalFootprint />
     <CoreCategories />
-    
     <ManufacturingStrength />
-
-    <section class="py-20 text-center bg-white">
-        <h2 class="text-3xl font-bold">Almost Done...</h2>
-        <p class="text-gray-500 mt-4">等待构建最后的 CTA 询盘转化区</p>
-    </section>
+    
+    <FinalCTA />
   </main>
+
+  <Footer />
 </Layout>
