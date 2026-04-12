@@ -4,6 +4,15 @@ import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 
+// 模拟动态产品图片数据
+const mainProductImage = "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop";
+const galleryImages = [
+  mainProductImage,
+  "https://images.unsplash.com/photo-1610443900742-ac8c34c01258?q=80&w=600&auto=format&fit=crop", // 背部图
+  "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600&auto=format&fit=crop", // 细节图
+  "https://images.unsplash.com/photo-1581605405669-fcdf81165afa?q=80&w=600&auto=format&fit=crop"  // 使用场景图
+];
+
 const pageTitle = "22L Convertible Rolling Backpack - Royalbudd";
 ---
 
@@ -11,53 +20,49 @@ const pageTitle = "22L Convertible Rolling Backpack - Royalbudd";
   <main class="bg-[#0a0a0a] min-h-screen pt-28 pb-24">
     <div class="container mx-auto px-6 max-w-7xl">
       
-      <nav class="flex text-gray-500 text-xs uppercase tracking-widest mb-10">
+      <nav class="flex text-gray-600 text-[11px] uppercase tracking-widest mb-10 border-b border-gray-900 pb-5">
         <a href="/" class="hover:text-[#D4AF37] transition-colors">Home</a>
-        <span class="mx-2">/</span>
+        <span class="mx-3 text-gray-800">/</span>
         <a href="/products" class="hover:text-[#D4AF37] transition-colors">Products</a>
-        <span class="mx-2">/</span>
-        <span class="text-gray-300">22L Convertible Rolling Backpack</span>
+        <span class="mx-3 text-gray-800">/</span>
+        <span class="text-gray-400">22L Convertible Rolling Backpack</span>
       </nav>
 
-      <div class="flex flex-col lg:flex-row gap-16 items-start">
+      <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 lg:items-stretch mb-24">
         
-        <div class="w-full lg:w-1/2">
-          <div class="sticky top-32">
-            <div class="bg-[#111111] border border-gray-800 rounded-2xl p-8 md:p-16 flex items-center justify-center relative overflow-hidden group">
-              <div class="absolute inset-0 bg-gradient-to-b from-gray-800/20 to-transparent opacity-50"></div>
+        <div class="w-full lg:w-1/2 flex flex-col">
+            <div class="relative bg-[#111111] border border-gray-800 rounded-2xl p-6 md:p-12 aspect-square flex items-center justify-center overflow-hidden group mb-6 flex-grow">
+              <div class="absolute inset-0 bg-gradient-to-b from-gray-900/40 to-transparent opacity-60"></div>
               
               <img 
-                src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop" 
+                id="mainImage"
+                src={mainProductImage} 
                 alt="22L Convertible Rolling Backpack" 
-                class="relative z-10 w-full max-w-md object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500"
+                class="relative z-10 w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-crosshair transition-transform duration-300"
               />
+              
+              <div class="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm p-2 rounded-lg border border-gray-700 opacity-60 group-hover:opacity-100 transition-opacity z-20">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+              </div>
             </div>
 
-            <div class="grid grid-cols-4 gap-4 mt-6">
-              <div class="bg-[#111111] border-2 border-[#D4AF37] rounded-xl p-2 cursor-pointer aspect-square flex items-center justify-center">
-                 <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=200&auto=format&fit=crop" class="object-contain w-full h-full opacity-100"/>
-              </div>
-              <div class="bg-[#111111] border border-gray-800 hover:border-gray-500 rounded-xl p-2 cursor-pointer aspect-square flex items-center justify-center transition-colors">
-                 <div class="text-gray-600 text-xs">Image 2</div>
-              </div>
-              <div class="bg-[#111111] border border-gray-800 hover:border-gray-500 rounded-xl p-2 cursor-pointer aspect-square flex items-center justify-center transition-colors">
-                 <div class="text-gray-600 text-xs">Image 3</div>
-              </div>
-              <div class="bg-[#111111] border border-gray-800 hover:border-gray-500 rounded-xl p-2 cursor-pointer aspect-square flex items-center justify-center transition-colors">
-                 <div class="text-gray-600 text-xs">Image 4</div>
-              </div>
+            <div class="grid grid-cols-4 gap-4" id="galleryThumbs">
+              {galleryImages.map((imgSrc, index) => (
+                <div class={`gallery-thumb ${index === 0 ? 'active' : ''} bg-[#111111] border border-gray-800 hover:border-gray-500 rounded-xl p-1.5 md:p-2 cursor-pointer aspect-square flex items-center justify-center transition-all`}>
+                  <img src={imgSrc} alt={`Gallery ${index + 1}`} class="object-contain w-full h-full transition-opacity"/>
+                </div>
+              ))}
             </div>
-          </div>
         </div>
 
-        <div class="w-full lg:w-1/2">
+        <div class="w-full lg:w-1/2 flex flex-col justify-center">
           
-          <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight tracking-tight">
-            22L Convertible Rolling Backpack Carry-on Luggage for Business & Travel
+          <h1 class="text-3xl lg:text-4xl font-black text-white mb-4 leading-[1.15] md:leading-[1.1] tracking-tighter mx-auto max-w-xl lg:mx-0">
+            22L Convertible Rolling BackpackCarry-on Luggage for Business & Travel
           </h1>
           
-          <div class="text-3xl font-bold text-[#D4AF37] mb-8">
-            $26-$33 <span class="text-lg text-gray-500 font-normal">/ PCS</span>
+          <div class="text-3xl font-bold text-[#D4AF37] mb-8 border-b border-gray-900 pb-5">
+            $26-$33 <span class="text-lg text-gray-600 font-normal">/ PCS</span>
           </div>
 
           <div class="mb-10">
@@ -69,81 +74,49 @@ const pageTitle = "22L Convertible Rolling Backpack - Royalbudd";
             </div>
           </div>
 
-          <div class="bg-[#111111] border border-gray-800 rounded-2xl p-8 mb-10">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
-              
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">MOQ</span>
-                <span class="text-white font-bold text-sm">300 Pcs</span>
-              </div>
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Sample Time</span>
-                <span class="text-white font-bold text-sm">7-10 days</span>
-              </div>
-
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Lead Time</span>
-                <span class="text-white font-bold text-sm">25-30 days</span>
-              </div>
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Fabric</span>
-                <span class="text-white font-bold text-sm">1680D nylon</span>
-              </div>
-
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Lining</span>
-                <span class="text-white font-bold text-sm">210D polyester</span>
-              </div>
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Capacity</span>
-                <span class="text-white font-bold text-sm">20L</span>
-              </div>
-
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Size</span>
-                <span class="text-white font-bold text-sm">40 x 30 x 20 cm</span>
-              </div>
-              <div class="flex justify-between items-end border-b border-gray-800/60 pb-2">
-                <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Weight</span>
-                <span class="text-white font-bold text-sm">1.8kg</span>
-              </div>
-
+          <div class="bg-[#111111] border border-gray-800 rounded-2xl p-7 md:p-8 mb-10">
+            <div class="grid grid-cols-2 gap-x-8 md:gap-x-12 gap-y-6">
+              {[
+                { label: 'MOQ', value: '300 Pcs' }, { label: 'Sample Time', value: '7-10 days' },
+                { label: 'Lead Time', value: '25-30 days' }, { label: 'Fabric', value: '1680D nylon' },
+                { label: 'Lining', value: '210D polyester' }, { label: 'Capacity', value: '20L' },
+                { label: 'Size', value: '40 x 30 x 20 cm' }, { label: 'Weight', value: '1.8kg' },
+              ].map(item => (
+                <div class="flex justify-between items-end border-b border-gray-800/60 pb-1.5">
+                  <span class="text-gray-500 text-xs uppercase tracking-widest font-semibold">{item.label}</span>
+                  <span class="text-white font-bold text-sm">{item.value}</span>
+                </div>
+              ))}
             </div>
           </div>
 
           <div class="flex flex-wrap gap-3 mb-10">
-            <span class="bg-[#1a1a1a] border border-gray-700 text-gray-400 px-3 py-1.5 rounded text-xs font-semibold tracking-wider">
-              SKU: 96028
-            </span>
+            <span class="bg-[#1a1a1a] border border-gray-700 text-gray-400 px-3 py-1.5 rounded text-xs font-semibold tracking-wider">SKU: 96028</span>
             <span class="bg-[#D4AF37]/10 border border-[#D4AF37]/40 text-[#D4AF37] px-3 py-1.5 rounded text-xs font-bold tracking-wider flex items-center">
-              <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              SUPPORT ODM/OEM
+              <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>SUPPORT ODM/OEM
             </span>
-            <span class="bg-[#1a1a1a] border border-gray-700 text-gray-300 px-3 py-1.5 rounded text-xs font-semibold tracking-wider flex items-center">
-              <svg class="w-3.5 h-3.5 mr-1.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-              BLANK LABEL
+            <span class="bg-[#1a1a1a] border border-gray-800 text-gray-300 px-3 py-1.5 rounded text-xs font-semibold tracking-wider flex items-center">
+              <svg class="w-3.5 h-3.5 mr-1.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>BLANK LABEL
             </span>
           </div>
 
           <button class="w-full bg-gradient-to-r from-[#D4AF37] to-[#AA8529] hover:from-[#E5C048] hover:to-[#BBA040] text-black font-black text-lg py-5 rounded-xl uppercase tracking-widest transition-all transform hover:-translate-y-1 shadow-[0_10px_30px_rgba(212,175,55,0.3)]">
             Send Inquiry for Sample
           </button>
-
         </div>
       </div>
 
-      <div class="mt-32 pt-16 border-t border-gray-900">
+      <div class="mt-24 pt-16 border-t border-gray-900">
         <div class="flex items-center gap-4 mb-16">
-          <h2 class="text-2xl font-bold text-white tracking-wide">Product Specifications</h2>
-          <div class="h-[1px] flex-grow bg-gray-900"></div>
+          <h2 class="text-2xl md:text-3xl font-bold text-white tracking-wide">Product Specifications</h2>
+          <div class="h-[1px] flex-grow bg-gray-900 opacity-60"></div>
         </div>
 
-        <div class="bg-[#0f0f0f] border border-gray-800 rounded-2xl p-10 flex flex-col items-center justify-center min-h-[600px]">
-          <h3 class="text-4xl font-black text-gray-700 uppercase tracking-[0.2em] mb-4">Product</h3>
-          <div class="h-[2px] w-32 bg-gray-700 mb-4"></div>
-          <h3 class="text-4xl font-black text-gray-700 uppercase tracking-[0.2em]">Specifications</h3>
-          <p class="text-gray-600 mt-8 max-w-lg text-center">
-            (Once connected to CMS, the high-resolution long images uploaded by the operator will be seamlessly rendered here, without margins, creating an immersive product deep-dive.)
+        <div class="bg-[#0f0f0f] border border-gray-800 rounded-2xl p-6 md:p-10 flex flex-col items-center justify-center min-h-[500px]">
+          <h3 class="text-3xl font-black text-gray-700 uppercase tracking-[0.2em] mb-4">immersive Specifications</h3>
+          <div class="h-[2px] w-32 bg-gray-700 mb-4 opacity-70"></div>
+          <p class="text-gray-600 mt-8 max-w-lg text-center text-sm leading-relaxed">
+            Once connected to CMS, the high-resolution long images uploaded by the operator will be seamlessly rendered here, creating an immersive product deep-dive.
           </p>
         </div>
       </div>
@@ -153,4 +126,37 @@ const pageTitle = "22L Convertible Rolling Backpack - Royalbudd";
 
   <FinalCTA />
   <Footer />
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mainImage = document.getElementById('mainImage');
+        const thumbs = document.querySelectorAll('#galleryThumbs .gallery-thumb');
+
+        thumbs.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                // 1. 获取点击的缩略图里的图片地址
+                const newSrc = this.querySelector('img').src;
+                
+                // 2. 更新主图地址
+                mainImage.src = newSrc;
+
+                // 3. 更新缩略图的“激活 (Active)”样式
+                thumbs.forEach(t => t.classList.remove('active', 'border-gray-500', 'ring-2', 'ring-[#D4AF37]'));
+                this.classList.add('active', 'border-gray-500', 'ring-2', 'ring-[#D4AF37]');
+            });
+        });
+    });
+  </script>
+
+  <style is:inline>
+    .gallery-thumb.active {
+        border-color: #gray-500;
+        --tw-ring-opacity: 1;
+        --tw-ring-color: rgb(212 175 55 / var(--tw-ring-opacity));
+        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    }
+  </style>
+
 </Layout>
