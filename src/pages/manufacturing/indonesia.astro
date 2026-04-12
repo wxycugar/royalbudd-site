@@ -4,6 +4,25 @@ import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 
+// 引入 Sanity 客户端
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) {
+  return builder.image(source);
+}
+
+// 去后台抓取印尼页面的数据
+const query = `*[_type == "indonesiaPage"][0]`;
+let pageData = null;
+
+try {
+  pageData = await sanityClient.fetch(query);
+} catch (error) {
+  console.error("CMS数据连接失败:", error);
+}
+
 const pageTitle = "Indonesia Base - Mass Production & Duty-Free | Royalbudd";
 ---
 
@@ -12,7 +31,11 @@ const pageTitle = "Indonesia Base - Mass Production & Duty-Free | Royalbudd";
     
     <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-900">
       <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=2000&auto=format&fit=crop" alt="Indonesia Factory Exterior" class="w-full h-full object-cover opacity-20" />
+        {pageData?.heroImage ? (
+          <img src={urlFor(pageData.heroImage).width(1920).url()} alt="Indonesia Factory" class="w-full h-full object-cover opacity-20" />
+        ) : (
+          <div class="w-full h-full bg-[#111111]"></div>
+        )}
         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
       </div>
 
@@ -35,7 +58,15 @@ const pageTitle = "Indonesia Base - Mass Production & Duty-Free | Royalbudd";
         <div class="flex flex-col lg:flex-row gap-16 items-center">
           <div class="w-full lg:w-1/2 relative">
             <div class="relative rounded-2xl overflow-hidden border border-gray-800">
-              <img src="https://images.unsplash.com/photo-1612803657962-e6e7687f1bf2?q=80&w=1000&auto=format&fit=crop" alt="Sewing Production Line" class="w-full h-[500px] object-cover" />
+              
+              {pageData?.productionImage ? (
+                <img src={urlFor(pageData.productionImage).width(800).url()} alt="Sewing Production Line" class="w-full h-[500px] object-cover" />
+              ) : (
+                <div class="w-full h-[500px] bg-[#1a1a1a] flex items-center justify-center text-gray-500 border border-gray-800">
+                  等待后台上传生产线图片...
+                </div>
+              )}
+
               <div class="absolute top-6 right-6 bg-black/80 backdrop-blur px-4 py-2 rounded flex items-center border border-gray-700">
                 <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
                 <span class="text-white text-sm font-bold tracking-wider">BSCI & ISO 9001</span>
