@@ -1,0 +1,50 @@
+---
+// 文件：src/pages/products/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) { return builder.image(source); }
+
+// 抓取所有产品
+const products = await sanityClient.fetch(`*[_type == "product"] | order(_createdAt desc)`);
+---
+
+<Layout title="Product Collection - Royalbudd">
+  <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
+    <div class="container mx-auto px-6">
+      
+      <div class="max-w-3xl mb-16">
+        <h1 class="text-5xl font-black text-white mb-6 tracking-tighter">Engineered for <span class="text-[#D4AF37]">Execution.</span></h1>
+        <p class="text-gray-500 text-lg leading-relaxed">Explore our high-performance bag collection, where industrial precision meets global supply chain efficiency.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {products.map(item => (
+          <a href={`/products/${item.slug.current}`} class="group bg-[#111111] border border-gray-800 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all">
+            <div class="aspect-square p-8 flex items-center justify-center relative bg-gradient-to-b from-gray-900/20 to-transparent">
+              <img 
+                src={urlFor(item.mainImage).width(600).url()} 
+                alt={item.title} 
+                class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
+              />
+            </div>
+            <div class="p-8 border-t border-gray-900 bg-[#0d0d0d]">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors line-clamp-1">{item.title}</h3>
+              </div>
+              <div class="flex justify-between items-center mt-6">
+                <span class="text-[#D4AF37] font-bold text-lg">{item.price || 'Inquire'}</span>
+                <span class="text-gray-600 text-[10px] uppercase font-bold tracking-widest border border-gray-800 px-2 py-1 rounded">MOQ: {item.moq}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Layout>
