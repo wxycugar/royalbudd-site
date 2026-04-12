@@ -12,7 +12,7 @@ function urlFor(source) {
   return builder.image(source);
 }
 
-// 正式开启后台数据抓取！
+// 抓取后台数据
 const query = `*[_type == "bangladeshPage"][0]`;
 let pageData = null;
 
@@ -28,27 +28,38 @@ const pageTitle = "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd"
 <Layout title={pageTitle}>
   <main class="bg-[#0a0a0a] min-h-screen">
     
-    <section class="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden border-b border-gray-900">
+    <section class="relative min-h-[80vh] flex items-center pt-20 overflow-hidden border-b border-gray-900">
+      
       <div class="absolute inset-0 z-0">
         {pageData?.heroImage ? (
-          <img src={urlFor(pageData.heroImage).width(1920).url()} alt="Bangladesh Factory" class="w-full h-full object-cover opacity-80" />
+          <img src={urlFor(pageData.heroImage).width(1920).url()} alt="Bangladesh Factory" class="w-full h-full object-cover" />
         ) : (
           <div class="w-full h-full bg-[#0d1110]"></div>
         )}
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')]"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-[#0a0a0a]/30"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] h-20 bottom-0 top-auto"></div>
       </div>
 
-      <div class="container mx-auto px-6 relative z-10">
-        <span class="inline-block py-1 px-3 border border-green-900 bg-green-900/20 text-green-500 text-xs font-bold tracking-widest uppercase rounded-full mb-6">
-          Dhaka & Sylhet, Bangladesh
-        </span>
-        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
-          The <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-200">Scale</span> to Win<br/>Global Tenders.
-        </h1>
-        <p class="text-xl text-gray-400 max-w-2xl leading-relaxed">
-          When price is the deciding factor, our Bangladesh facilities deliver. Engineered for massive volume, deep cost optimization, and duty-free access to the European Union and UK markets.
-        </p>
+      <div class="container mx-auto px-6 relative z-10 flex justify-start">
+        
+        <div class="w-full md:w-2/3 lg:w-[38%] xl:w-[35%]">
+            
+            <div class="relative bg-black/40 backdrop-blur-2xl border border-white/10 p-6 md:p-8 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.6)] overflow-hidden">
+                
+                <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+                <span class="inline-block py-1 px-3 border border-green-500/40 bg-green-500/10 text-green-300 text-[9px] font-bold tracking-widest uppercase rounded-full mb-4">
+                    Dhaka & Sylhet, Bangladesh
+                </span>
+                
+                <h1 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight tracking-tight drop-shadow-md">
+                    The <span class="text-green-400">Scale</span> to Win Global Tenders.
+                </h1>
+                
+                <p class="text-[13px] text-gray-300 leading-relaxed mb-0 font-light">
+                    When price is the deciding factor, our Bangladesh facilities deliver. Engineered for massive volume, deep cost optimization, and duty-free access to the European Union and UK markets.
+                </p>
+                </div>
+        </div>
       </div>
     </section>
 
@@ -218,7 +229,7 @@ const pageTitle = "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd"
 
       </div>
     </section>
-           
+
     <FinalCTA />
   </main>
   <Footer />
