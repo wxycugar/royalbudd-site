@@ -1,0 +1,132 @@
+---
+// 文件：src/pages/manufacturing/china.astro
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const pageTitle = "China R&D Hub | Royalbudd Global Manufacturing";
+---
+
+<Layout title={pageTitle}>
+  <main class="bg-[#0a0a0a] min-h-screen">
+    
+    <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-900">
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2000&auto=format&fit=crop" alt="R&D Lab" class="w-full h-full object-cover opacity-20" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
+      </div>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <span class="inline-block py-1 px-3 border border-[#D4AF37] text-[#D4AF37] text-xs font-bold tracking-widest uppercase rounded mb-6">
+          Jiangmen, Guangdong
+        </span>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
+          The <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-yellow-200">Brain</span> Behind<br/>Your Brand.
+        </h1>
+        <p class="text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed">
+          Strategically located in the heart of China's Greater Bay Area, our Jiangmen Hub is the nerve center of Royalbudd. We transform your concepts into production-ready prototypes in record time.
+        </p>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#111111]">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-[#D4AF37] font-bold tracking-wider text-sm mb-4 uppercase">Speed to Market</h2>
+          <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">7-Day Agile Prototyping.</h3>
+          <p class="text-gray-400 text-lg">
+            Outpace your competitors. Our in-house design team and automated sample room turn ideas into physical reality within a single week.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+          <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-800 -translate-y-1/2 z-0"></div>
+          <div class="hidden md:block absolute top-1/2 left-0 w-3/4 h-0.5 bg-[#D4AF37] -translate-y-1/2 z-0 opacity-50 blur-[2px]"></div>
+
+          <div class="relative z-10 bg-[#0a0a0a] border border-gray-800 rounded-xl p-8 hover:border-[#D4AF37]/50 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-gray-900 border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold text-xl mb-6">1</div>
+            <h4 class="text-white font-bold text-xl mb-3">3D CAD Modeling</h4>
+            <p class="text-gray-500 text-sm">Translating your sketches or tech packs into precise digital patterns.</p>
+          </div>
+          
+          <div class="relative z-10 bg-[#0a0a0a] border border-gray-800 rounded-xl p-8 hover:border-[#D4AF37]/50 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-gray-900 border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold text-xl mb-6">2</div>
+            <h4 class="text-white font-bold text-xl mb-3">Material Selection</h4>
+            <p class="text-gray-500 text-sm">Leveraging the PRD supply chain to source specific fabrics and hardware instantly.</p>
+          </div>
+
+          <div class="relative z-10 bg-[#0a0a0a] border border-gray-800 rounded-xl p-8 hover:border-[#D4AF37]/50 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-gray-900 border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold text-xl mb-6">3</div>
+            <h4 class="text-white font-bold text-xl mb-3">Laser Cutting</h4>
+            <p class="text-gray-500 text-sm">Automated precision cutting ensuring exact tolerances for the sample.</p>
+          </div>
+
+          <div class="relative z-10 bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-xl p-8 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+            <div class="w-12 h-12 rounded-full bg-[#D4AF37] flex items-center justify-center text-black font-bold text-xl mb-6 shadow-[0_0_15px_rgba(212,175,55,0.5)]">4</div>
+            <h4 class="text-[#D4AF37] font-bold text-xl mb-3">Final Assembly</h4>
+            <p class="text-gray-400 text-sm">Master craftsmen sew and finish the prototype, ready for your approval.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#0a0a0a]">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          
+          <div class="w-full lg:w-1/2">
+            <h2 class="text-[#D4AF37] font-bold tracking-wider text-sm mb-4 uppercase">Command Center</h2>
+            <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Consolidating the Chaos.</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">
+              We don't rely on our Southeast Asian plants to hunt for zippers or buckles. Everything is strictly controlled through our China Hub. 
+            </p>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <svg class="w-6 h-6 text-[#D4AF37] mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                  <h5 class="text-white font-bold mb-1">Centralized Sourcing</h5>
+                  <p class="text-sm text-gray-500">We bulk-buy premium materials from China's mature supply chain to lock in the lowest costs.</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <svg class="w-6 h-6 text-[#D4AF37] mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                  <h5 class="text-white font-bold mb-1">Pre-Export Quality Check</h5>
+                  <p class="text-sm text-gray-500">100% of raw materials are inspected in Jiangmen before being shipped to our overseas plants.</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <svg class="w-6 h-6 text-[#D4AF37] mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                  <h5 class="text-white font-bold mb-1">Kitting & Logistics</h5>
+                  <p class="text-sm text-gray-500">Materials are cut and packed into "Ready-to-Sew" kits, ensuring SE Asia plants only focus on efficient assembly.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="w-full lg:w-1/2">
+            <div class="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl p-2 bg-gray-900/50 backdrop-blur-sm">
+              <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7fc51f7?q=80&w=1000&auto=format&fit=crop" alt="Warehouse Logistics" class="w-full h-auto rounded-xl" />
+              <div class="absolute bottom-6 left-6 right-6 bg-[#0a0a0a]/90 backdrop-blur border border-[#D4AF37]/30 p-6 rounded-xl flex justify-between items-center">
+                <div>
+                  <span class="block text-xs text-gray-400 uppercase tracking-widest mb-1">Material Supply</span>
+                  <span class="block text-2xl font-bold text-white">China Hub</span>
+                </div>
+                <svg class="w-8 h-8 text-[#D4AF37] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div class="text-right">
+                  <span class="block text-xs text-gray-400 uppercase tracking-widest mb-1">Assembly Line</span>
+                  <span class="block text-2xl font-bold text-white">SE Asia Plants</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <FinalCTA />
+  </main>
+  <Footer />
+</Layout>
