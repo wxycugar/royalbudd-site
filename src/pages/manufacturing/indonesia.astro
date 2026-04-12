@@ -15,7 +15,7 @@ function urlFor(source) {
 
 // 去后台抓取印尼页面的数据
 const query = `*[_type == "indonesiaPage"][0]`;
-let pageData = null;
+let pageData = null;   
 
 try {
   pageData = await sanityClient.fetch(query);
@@ -188,4 +188,4 @@ const pageTitle = "Indonesia Base - PT PLAYWORKS INDONESIA | Royalbudd";
   </main>
   
   <Footer />
-</Layout>
+</Layout> 
