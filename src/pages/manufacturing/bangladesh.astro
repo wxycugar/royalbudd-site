@@ -1,0 +1,132 @@
+---
+// 文件：src/pages/manufacturing/bangladesh.astro
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+// 引入 Sanity 客户端 (如果后期你也想把这里的图做成后台可换，随时可以用，现在先写死图片链接保证展示效果)
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) {
+  return builder.image(source);
+}
+
+// 占位抓取逻辑 (预留坑位，等你想去后台建 bangladeshPage 时直接可用)
+// const query = `*[_type == "bangladeshPage"][0]`;
+// let pageData = await sanityClient.fetch(query).catch(() => null);
+
+const pageTitle = "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd";
+---
+
+<Layout title={pageTitle}>
+  <main class="bg-[#0a0a0a] min-h-screen">
+    
+    <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-900">
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1590483736622-398541ce1f8c?q=80&w=2000&auto=format&fit=crop" alt="Bangladesh Facility" class="w-full h-full object-cover opacity-20 grayscale" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
+      </div>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <span class="inline-block py-1 px-3 border border-green-600 text-green-500 text-xs font-bold tracking-widest uppercase rounded mb-6">
+          Dhaka, Bangladesh
+        </span>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
+          The <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-200">Scale</span> to Win<br/>Global Tenders.
+        </h1>
+        <p class="text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed">
+          When price is the deciding factor, our Dhaka facilities deliver. Engineered for massive volume, deep cost optimization, and duty-free access to the European Union and UK markets.
+        </p>
+
+        <div class="bg-[#111111]/80 backdrop-blur-md border border-gray-800 p-6 rounded-xl inline-block text-left shadow-xl mt-4">
+          <h4 class="text-green-500 font-bold text-lg mb-3 tracking-wider uppercase">Strategic Partners: PLAYMAX & RIDING HIGH</h4>
+          
+          <div class="flex items-start mb-3">
+            <svg class="w-5 h-5 text-gray-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+            <p class="text-gray-400 text-sm max-w-md leading-relaxed uppercase">
+              Location: Dhaka Export Processing Zone (DEPZ) & Surrounding Industrial Areas<br/>
+              Bangladesh
+            </p>
+          </div>
+          <p class="text-xs text-gray-500 italic mt-2">* Audited by international third parties for full social compliance.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#111111]">
+      <div class="container mx-auto px-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          
+          <div class="bg-[#0a0a0a] border border-green-900/30 rounded-2xl p-10 hover:border-green-500/50 transition-all group">
+            <div class="w-16 h-16 bg-green-900/20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">EU/UK Duty-Free Access</h3>
+            <p class="text-gray-400 leading-relaxed mb-6">
+              Under the "Everything But Arms" (EBA) initiative, bags manufactured in our Bangladesh facilities enter the European Union and the UK completely duty-free. 
+            </p>
+            <div class="bg-[#111111] p-4 rounded-lg border border-gray-800 flex justify-between items-center">
+              <span class="text-gray-500 text-sm font-semibold">Standard Duty to EU: ~9%</span>
+              <span class="text-green-500 font-bold text-xl">Our Rate: 0%</span>
+            </div>
+          </div>
+
+          <div class="bg-[#0a0a0a] border border-gray-800 rounded-2xl p-10 hover:border-[#D4AF37]/50 transition-all group">
+            <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Aggressive Labor Arbitrage</h3>
+            <p class="text-gray-400 leading-relaxed mb-6">
+              Leveraging the world's most competitive labor market without compromising on ethical standards. Perfect for labor-intensive products like complex backpacks or high-volume tote bags.
+            </p>
+            <div class="bg-[#111111] p-4 rounded-lg border border-gray-800 flex justify-between items-center">
+              <span class="text-gray-500 text-sm font-semibold">Ideal Output:</span>
+              <span class="text-white font-bold">1M+ Pcs / High Volume</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#0a0a0a]">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-green-500 font-bold tracking-wider text-sm mb-4 uppercase">Transparent Operations</h2>
+          <h3 class="text-3xl md:text-5xl font-bold text-white mb-6">Inside the Powerhouse.</h3>
+          <p class="text-gray-400 text-lg">
+            We invite you to audit our facilities. Fully compliant with Sedex and BSCI frameworks to ensure your brand's reputation remains pristine.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 h-[600px]">
+          <div class="md:col-span-2 relative rounded-xl overflow-hidden group">
+            <img src="https://images.unsplash.com/photo-1558064971-ce486f3bdf90?q=80&w=1200&auto=format&fit=crop" alt="Large Sewing Floor" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+            <span class="absolute bottom-6 left-6 text-white font-bold tracking-wider text-sm uppercase bg-black/60 px-3 py-1 backdrop-blur">Main Production Line</span>
+          </div>
+          <div class="grid grid-rows-2 gap-4">
+            <div class="relative rounded-xl overflow-hidden group">
+              <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=600&auto=format&fit=crop" alt="QC Inspection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+              <span class="absolute bottom-4 left-4 text-white font-bold tracking-wider text-xs uppercase bg-black/60 px-2 py-1 backdrop-blur">In-line QC</span>
+            </div>
+            <div class="relative rounded-xl overflow-hidden group">
+              <img src="https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=600&auto=format&fit=crop" alt="Finished Goods Warehouse" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all"></div>
+              <span class="absolute bottom-4 left-4 text-white font-bold tracking-wider text-xs uppercase bg-black/60 px-2 py-1 backdrop-blur">Warehouse Loading</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <FinalCTA />
+  </main>
+  
+  <Footer />
+</Layout>
