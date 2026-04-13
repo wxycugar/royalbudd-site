@@ -10,4 +10,9 @@ const { node } = Astro.props;
 const url = builder.image(node).width(1200).url();
 ---
 
-<img src={url} alt="Product Detail" class="w-full rounded-2xl my-10 shadow-lg object-contain" />
+<img 
+  src={url} 
+  alt="Product Detail" 
+  class="w-full block m-0 p-0 border-none rounded-none outline-none" 
+  style="display: block; margin: 0 !important; padding: 0 !important;" 
+/>

@@ -216,5 +216,21 @@ const galleryImages = product.gallery ? [product.mainImage, ...product.gallery] 
     .royal-rich-text li { margin-bottom: 0.5em; }
     .royal-rich-text strong { color: #ffffff; font-weight: 800; }
     .royal-rich-text a { color: #D4AF37; text-decoration: underline; text-underline-offset: 4px; }
+    /* ... 之前的 royal-rich-text 样式保留 ... */
+
+  /* 【新增】：强制干掉富文本里图片可能自带的任何边距、间隙和圆角 */
+  .royal-rich-text img {
+      margin: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      display: block !important;
+      width: 100% !important;
+  }
+  
+  /* 【新增】：如果 Sanity 把图片自动包在了段落 <p> 里，把这个段落的底部边距也强制清零 */
+  .royal-rich-text p:has(img) {
+      margin: 0 !important;
+      padding: 0 !important;
+  }
   </style>  
 </Layout>     
