@@ -1,0 +1,13 @@
+---
+// 文件：src/components/PortableTextImage.astro
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+const { node } = Astro.props;
+
+// 把后台传过来的图片数据，转换成宽度最大 1200px 的高清图片 URL
+const url = builder.image(node).width(1200).url();
+---
+
+<img src={url} alt="Product Detail" class="w-full rounded-2xl my-10 shadow-lg object-contain" />
