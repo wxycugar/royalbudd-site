@@ -4,7 +4,36 @@ import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 
-// 页面 SEO 标题
+// 引入 Sanity 客户端和图片解析器
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+// 安全的图片解析函数：如果没有传图，就不会报错
+function urlFor(source) {
+  return source ? builder.image(source).url() : '';
+}
+
+// 1. 抓取后台数据 (抓取 _type 为 rdPage 的那篇唯一文档)
+const query = `*[_type == "rdPage"][0]`;
+const pageData = await sanityClient.fetch(query) || {};
+
+// 2. 智能容错处理 (如果后台还没来得及填数据，就先用我们之前写的霸气文案顶上)
+const heroTitle = pageData.heroTitle || "ENGINEERED TO PERFORM.";
+const heroSub = pageData.heroSub || "We merge advanced industrial aesthetics with rigorous structural engineering. Our R&D center is where complex global sourcing challenges meet precise manufacturing solutions.";
+
+const labs = pageData.labs && pageData.labs.length > 0 ? pageData.labs : [
+  { title: 'Rapid Prototyping Center', desc: 'From 2D sketches to 3D CAD models and physical samples in as fast as 48 hours. Our facility is equipped with advanced laser cutting and precision sewing modules.', image: null },
+  { title: 'Structural Material Lab', desc: 'Rigorous testing for tensile strength, abrasion resistance, and waterproofing. We ensure every fabric meets the highest global compliance standards.', image: null }
+];
+
+const processes = pageData.process && pageData.process.length > 0 ? pageData.process : [
+    {step: '01', title: 'Conceptual Design', desc: 'Merging buyer requirements with functional innovation.'},
+    {step: '02', title: 'Structural CAD', desc: 'Precise pattern making and material load analysis.'},
+    {step: '03', title: 'Component Sourcing', desc: 'Global sourcing of hardware and custom fabrics.'},
+    {step: '04', title: 'Master Sample', desc: 'Physical verification of aesthetics and durability.'}
+];
+
 const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
 ---
 
@@ -16,11 +45,11 @@ const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
         <span class="inline-block py-1.5 px-4 border border-[#D4AF37]/40 bg-[#D4AF37]/5 text-[#D4AF37] text-[10px] font-black tracking-[0.3em] uppercase rounded-full mb-8">
             Innovation Hub
         </span>
-        <h1 class="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-none">
-            ENGINEERED TO <br/><span class="text-[#D4AF37]">PERFORM.</span>
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 tracking-tighter leading-[1.1] max-w-4xl mx-auto uppercase">
+            {heroTitle}
         </h1>
         <p class="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
-            We merge advanced industrial aesthetics with rigorous structural engineering. Our R&D center is where complex global sourcing challenges meet precise manufacturing solutions.
+            {heroSub}
         </p>
       </div>
       <div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
@@ -31,20 +60,20 @@ const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
     <section class="py-24 bg-[#0d0d0d]">
       <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div class="group relative bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden p-10 hover:border-[#D4AF37]/40 transition-all">
-            <h3 class="text-2xl font-bold text-white mb-6">Rapid Prototyping Center</h3>
-            <p class="text-gray-400 mb-8 leading-relaxed">From 2D sketches to 3D CAD models and physical samples in as fast as 48 hours. Our facility is equipped with advanced laser cutting and precision sewing modules.</p>
-            <div class="aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-800">
-                <div class="w-full h-full flex items-center justify-center text-gray-700 uppercase tracking-widest text-xs italic">Laboratory Real-shot Image</div>
+          {labs.map((lab) => (
+            <div class="group relative bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden p-8 lg:p-10 hover:border-[#D4AF37]/40 transition-all flex flex-col h-full">
+              <h3 class="text-2xl font-bold text-white mb-6">{lab.title}</h3>
+              <p class="text-gray-400 mb-8 leading-relaxed flex-grow">{lab.desc}</p>
+              
+              <div class="aspect-video bg-[#0a0a0a] rounded-2xl overflow-hidden border border-gray-800 relative">
+                {lab.image ? (
+                  <img src={urlFor(lab.image)} alt={lab.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-gray-700 uppercase tracking-widest text-xs italic">Laboratory Real-shot Image</div>
+                )}
+              </div>
             </div>
-          </div>
-          <div class="group relative bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden p-10 hover:border-[#D4AF37]/40 transition-all">
-            <h3 class="text-2xl font-bold text-white mb-6">Structural Material Lab</h3>
-            <p class="text-gray-400 mb-8 leading-relaxed">Rigorous testing for tensile strength, abrasion resistance, and waterproofing. We ensure every fabric meets the highest global compliance standards.</p>
-            <div class="aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-800">
-                <div class="w-full h-full flex items-center justify-center text-gray-700 uppercase tracking-widest text-xs italic">Material Testing Image</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
@@ -54,19 +83,14 @@ const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
         <div class="flex flex-col md:flex-row gap-12 items-center">
             <div class="md:w-1/3">
                 <h2 class="text-3xl font-black text-white mb-6">The Royalbudd <br/>R&D Workflow.</h2>
-                <p class="text-gray-500">Precision is not an accident. It is the result of a disciplined engineering process that bridges design and mass production.</p>
+                <p class="text-gray-500 leading-relaxed">Precision is not an accident. It is the result of a disciplined engineering process that bridges design and mass production.</p>
             </div>
             <div class="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {[
-                    {step: '01', title: 'Conceptual Design', desc: 'Merging buyer requirements with functional innovation.'},
-                    {step: '02', title: 'Structural CAD', desc: 'Precise pattern making and material load analysis.'},
-                    {step: '03', title: 'Component Sourcing', desc: 'Global sourcing of hardware and custom fabrics.'},
-                    {step: '04', title: 'Master Sample', desc: 'Physical verification of aesthetics and durability.'}
-                ].map(item => (
-                    <div class="bg-[#111111] p-8 rounded-2xl border-l-4 border-[#D4AF37]">
+                {processes.map((item) => (
+                    <div class="bg-[#111111] p-8 rounded-2xl border-l-4 border-[#D4AF37] hover:bg-[#151515] transition-colors">
                         <span class="text-[#D4AF37] font-black text-xs mb-2 block">{item.step}</span>
-                        <h4 class="text-white font-bold mb-2">{item.title}</h4>
-                        <p class="text-gray-500 text-sm">{item.desc}</p>
+                        <h4 class="text-white font-bold mb-2 text-lg">{item.title}</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                     </div>
                 ))}
             </div>
