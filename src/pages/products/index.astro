@@ -96,13 +96,16 @@ const products = await sanityClient.fetch(`*[_type == "product"] | order(_create
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. 获取所有的元素节点
       const filterBtns = document.querySelectorAll('.filter-btn');
       const productCards = document.querySelectorAll('.product-card');
       const noProductsMsg = document.getElementById('no-products-msg');
 
+      // 2. 核心逻辑：给每个按钮绑定点击和过滤的功能
       filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          // 1. 处理按钮样式 (重置所有，激活当前)
+          // 处理按钮样式 (重置所有，激活当前)
           filterBtns.forEach(b => {
             b.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
             b.classList.add('border-gray-800', 'bg-[#111111]', 'text-gray-400');
@@ -110,11 +113,11 @@ const products = await sanityClient.fetch(`*[_type == "product"] | order(_create
           btn.classList.remove('border-gray-800', 'bg-[#111111]', 'text-gray-400');
           btn.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
 
-          // 2. 获取当前点击的分类标识
+          // 获取当前点击的分类标识
           const filterValue = btn.getAttribute('data-filter');
           let visibleCount = 0;
 
-          // 3. 过滤产品
+          // 过滤产品瀑布流
           productCards.forEach(card => {
             const cardCategory = card.getAttribute('data-category');
             
@@ -128,7 +131,7 @@ const products = await sanityClient.fetch(`*[_type == "product"] | order(_create
             }
           });
 
-          // 4. 处理空状态显示
+          // 处理如果该分类下没有产品的空状态显示
           if (visibleCount === 0) {
             noProductsMsg.classList.remove('hidden');
           } else {
@@ -136,6 +139,21 @@ const products = await sanityClient.fetch(`*[_type == "product"] | order(_create
           }
         });
       });
+
+      // ----------------------------------------------------------------
+      // 3. 自动触发逻辑：读取 URL 参数并模拟点击 (必须放在绑定逻辑的最后面)
+      // ----------------------------------------------------------------
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetCat = urlParams.get('cat');
+      
+      if (targetCat) {
+          // 如果 URL 里带有类别参数，就找到对应的按钮并模拟点击它
+          const targetBtn = document.querySelector(`.filter-btn[data-filter="${targetCat}"]`);
+          if (targetBtn) {
+              targetBtn.click();
+          }
+      }
+
     });
   </script>
          
