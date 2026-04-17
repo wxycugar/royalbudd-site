@@ -6,7 +6,7 @@ import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
 const builder = imageUrlBuilder(sanityClient);
-function urlFor(source) { return source ? builder.image(source).url() : ''; }
+function urlFor(source) { return builder.image(source); }
 
 // 1. 抓取所有分类
 const categories = await sanityClient.fetch(`*[_type == "category"] | order(_createdAt asc)`);
