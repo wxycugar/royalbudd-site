@@ -6,45 +6,143 @@ import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
 const builder = imageUrlBuilder(sanityClient);
-function urlFor(source) { return builder.image(source); }
+function urlFor(source) { return source ? builder.image(source).url() : ''; }
 
-// 抓取所有产品
-const products = await sanityClient.fetch(`*[_type == "product"] | order(_createdAt desc)`);
+// 1. 抓取所有分类
+const categories = await sanityClient.fetch(`*[_type == "category"] | order(_createdAt asc)`);
+
+// 2. 抓取所有产品（重点：要把关联的分类数据 category-> 也一起抓过来）
+const products = await sanityClient.fetch(`*[_type == "product"] | order(_createdAt desc) {
+  ...,
+  category->{title, value}
+}`);
 ---
 
 <Layout title="Product Collection - Royalbudd">
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
-    <div class="container mx-auto px-6">
+    <div class="container mx-auto px-6 max-w-7xl">
       
-      <div class="max-w-3xl mb-16">
-        <h1 class="text-5xl font-black text-white mb-6 tracking-tighter">Engineered for <span class="text-[#D4AF37]">Execution.</span></h1>
-        <p class="text-gray-500 text-lg leading-relaxed">Explore our high-performance bag collection, where industrial precision meets global supply chain efficiency.</p>
+      <div class="max-w-3xl mb-12">
+        <h1 class="text-5xl font-black text-white mb-6 tracking-tighter uppercase">Engineered for <br/><span class="text-[#D4AF37]">Execution.</span></h1>
+        <p class="text-gray-500 text-lg leading-relaxed">Explore our high-performance bag collection. Select a category below to filter our engineering solutions.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="flex flex-wrap gap-4 mb-16 border-b border-gray-900 pb-6" id="filter-container">
+        <button 
+          class="filter-btn active px-6 py-2 rounded-full border border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37] text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#D4AF37] hover:text-black" 
+          data-filter="all">
+          All Products
+        </button>
+        
+        {categories.map(cat => (
+          <button 
+            class="filter-btn px-6 py-2 rounded-full border border-gray-800 bg-[#111111] text-gray-400 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#D4AF37] hover:text-[#D4AF37]" 
+            data-filter={cat.value}>
+            {cat.title}
+          </button>
+        ))}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid">
         {products.map(item => (
-          <a href={`/products/${item.slug.current}`} class="group bg-[#111111] border border-gray-800 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all">
-            <div class="aspect-square p-8 flex items-center justify-center relative bg-gradient-to-b from-gray-900/20 to-transparent">
-              <img 
-                src={urlFor(item.mainImage).width(600).url()} 
-                alt={item.title} 
-                class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
-              />
-            </div>
-            <div class="p-8 border-t border-gray-900 bg-[#0d0d0d]">
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors line-clamp-1">{item.title}</h3>
+          // 【核心】：在这个包裹容器上加上 data-category 属性，供 JS 读取
+          <a href={`/products/${item.slug.current}`} 
+             class="product-card group bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden hover:border-[#D4AF37]/50 transition-all duration-500 block"
+             data-category={item.category?.value || 'uncategorized'}>
+            
+            <div class="aspect-square p-8 flex items-center justify-center relative bg-gradient-to-b from-gray-900/40 to-transparent">
+              {item.mainImage ? (
+                <img 
+                  src={urlFor(item.mainImage).width(800).url()} 
+                  alt={item.title} 
+                  class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
+                />
+              ) : (
+                <div class="text-gray-700 text-sm">No Image</div>
+              )}
+              <div class="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm p-3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <svg class="w-5 h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </div>
-              <div class="flex justify-between items-center mt-6">
-                <span class="text-[#D4AF37] font-bold text-lg">{item.price || 'Inquire'}</span>
-                <span class="text-gray-600 text-[10px] uppercase font-bold tracking-widest border border-gray-800 px-2 py-1 rounded">MOQ: {item.moq}</span>
+            </div>
+
+            <div class="p-8 border-t border-gray-900 bg-[#0d0d0d]">
+              <div class="mb-4">
+                <span class="text-xs font-black text-gray-600 uppercase tracking-widest mb-2 block">{item.category?.title || 'General'}</span>
+                <h3 class="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">{item.title}</h3>
+              </div>
+              <div class="flex justify-between items-end mt-8 border-t border-gray-800/50 pt-4">
+                <div>
+                  <span class="text-gray-500 text-[10px] uppercase font-bold tracking-widest block mb-1">Target Price</span>
+                  <span class="text-[#D4AF37] font-black text-xl">{item.price || 'Inquire'}</span>
+                </div>
+                <div class="text-right">
+                   <span class="text-gray-500 text-[10px] uppercase font-bold tracking-widest block mb-1">MOQ</span>
+                   <span class="text-white font-bold text-sm bg-gray-900 px-3 py-1 rounded-lg border border-gray-800">{item.moq || '300 Pcs'}</span>
+                </div>
               </div>
             </div>
           </a>
         ))}
       </div>
 
+      <div id="no-products-msg" class="hidden text-center py-20">
+         <svg class="w-16 h-16 text-gray-800 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+         <h3 class="text-xl font-bold text-gray-500">No products found in this category.</h3>
+      </div>
+
     </div>
   </main>
   <Footer />
-</Layout> 
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const productCards = document.querySelectorAll('.product-card');
+      const noProductsMsg = document.getElementById('no-products-msg');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // 1. 处理按钮样式 (重置所有，激活当前)
+          filterBtns.forEach(b => {
+            b.classList.remove('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+            b.classList.add('border-gray-800', 'bg-[#111111]', 'text-gray-400');
+          });
+          btn.classList.remove('border-gray-800', 'bg-[#111111]', 'text-gray-400');
+          btn.classList.add('border-[#D4AF37]', 'bg-[#D4AF37]/10', 'text-[#D4AF37]');
+
+          // 2. 获取当前点击的分类标识
+          const filterValue = btn.getAttribute('data-filter');
+          let visibleCount = 0;
+
+          // 3. 过滤产品
+          productCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+            
+            if (filterValue === 'all' || filterValue === cardCategory) {
+              card.style.display = 'block';
+              // 加一点简单的淡入动画
+              card.style.animation = 'fadeIn 0.5s ease forwards';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          // 4. 处理空状态显示
+          if (visibleCount === 0) {
+            noProductsMsg.classList.remove('hidden');
+          } else {
+            noProductsMsg.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+
+  <style is:global>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</Layout>
