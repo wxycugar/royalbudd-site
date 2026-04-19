@@ -53,10 +53,16 @@ const products = await sanityClient.fetch(`*[_type == "product"] | order(_create
             <div class="aspect-square p-8 flex items-center justify-center relative bg-gradient-to-b from-gray-900/40 to-transparent">
               {item.mainImage ? (
                 <img 
-                  src={urlFor(item.mainImage).width(800).url()} 
-                  alt={item.title} 
-                  class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
-                />
+  src={builder.image(item.mainImage).width(800).auto('format').quality(80).url()} 
+  srcset={`
+    ${builder.image(item.mainImage).width(400).auto('format').quality(80).url()} 400w,
+    ${builder.image(item.mainImage).width(800).auto('format').quality(80).url()} 800w
+  `}
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+  loading="lazy"
+  alt={item.title} 
+  class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
+/>
               ) : (
                 <div class="text-gray-700 text-sm">No Image</div>
               )}
