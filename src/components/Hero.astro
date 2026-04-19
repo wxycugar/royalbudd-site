@@ -24,6 +24,7 @@ const bgImageStyle = data?.imageUrl ? `url('${data.imageUrl}')` : 'none';
   src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
   srcset={`
     ${data.imageUrl}?fm=webp&q=80&w=600 600w,
+    ${data.imageUrl}?fm=webp&q=80&w=800 800w,
     ${data.imageUrl}?fm=webp&q=80&w=1200 1200w
   `}
   sizes="(max-width: 768px) 100vw, 1200px"
