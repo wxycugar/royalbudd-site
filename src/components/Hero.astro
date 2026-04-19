@@ -1,38 +1,53 @@
 ---
 // src/components/Hero.astro
-// 这里我们引入 Sanity 的客户端工具（如果之前没装，等下可能需要装一下）
+// 这里我们引入 Sanity 的客户端工具
 import { sanityClient } from "sanity:client";
 
 // 1. 写查询语句：去数据库找 type 为 'homePage' 的文档，把它里面图片的真实网址拿出来
 const query = `*[_type == "homePage"][0] {
   heroTitle,
-  "imageUrl": heroBackgroundImage.asset->url
+  "imageUrl": heroBackgroundImage.asset->url,
+  "mobileImageUrl": mobileImage.asset->url // <--- ✨ 手机端竖图
 }`;
 
 // 2. 执行查询，拿到数据
 const data = await sanityClient.fetch(query);
-
-// 3. 准备一个默认的背景色，以防万一图片没加载出来
-const bgImageStyle = data?.imageUrl ? `url('${data.imageUrl}')` : 'none';
 ---
 
 <section class="relative bg-gray-900 text-white pt-24 pb-20 md:pt-32 md:pb-40 overflow-hidden">
   <div class="absolute inset-0 z-0">
     <div class="absolute inset-0 bg-gray-900/70 z-10"></div>
+    
     {data?.imageUrl ? (
-       <img
-  src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
-  srcset={`
-    ${data.imageUrl}?fm=webp&q=80&w=600 600w,
-    ${data.imageUrl}?fm=webp&q=80&w=800 800w,
-    ${data.imageUrl}?fm=webp&q=80&w=1200 1200w
-  `}
-  sizes="(max-width: 768px) 100vw, 1200px"
-  fetchpriority="high"
-  loading="eager"
-  alt="Royalbudd Global Manufacturing Facility"
-  class="w-full h-full object-cover"
-/>
+      <picture>
+        {data.mobileImageUrl ? (
+          <source 
+            media="(max-width: 767px)" 
+            srcset={`${data.mobileImageUrl}?fm=webp&q=80&w=414&h=736&fit=crop 414w, ${data.mobileImageUrl}?fm=webp&q=80&w=828&h=1472&fit=crop 828w`} 
+            sizes="100vw" 
+          />
+        ) : (
+          <source 
+            media="(max-width: 767px)" 
+            srcset={`${data.imageUrl}?fm=webp&q=80&w=414&h=736&fit=crop 414w, ${data.imageUrl}?fm=webp&q=80&w=828&h=1472&fit=crop 828w`} 
+            sizes="100vw" 
+          />
+        )}
+
+        <img
+          src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
+          srcset={`
+            ${data.imageUrl}?fm=webp&q=80&w=600 600w,
+            ${data.imageUrl}?fm=webp&q=80&w=800 800w,
+            ${data.imageUrl}?fm=webp&q=80&w=1200 1200w
+          `}
+          sizes="(min-width: 768px) 100vw, 1200px"
+          fetchpriority="high"
+          loading="eager"
+          alt="Royalbudd Global Manufacturing Facility"
+          class="w-full h-full object-cover"
+        />
+      </picture>
     ) : (
       <div class="w-full h-full bg-gray-800"></div>
     )}
