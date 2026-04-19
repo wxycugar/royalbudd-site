@@ -77,47 +77,88 @@ const categories = await sanityClient.fetch(`*[_type == "category"] | order(_cre
     </button>
   </div>
 
-  <div id="mobile-menu" class="hidden lg:hidden bg-[#0a0a0a] border-t border-gray-800 h-screen overflow-y-auto pb-32">
-    <div class="flex flex-col px-6 py-6 space-y-4">
-      <a href="/" class="text-lg font-bold text-white border-b border-gray-800 pb-3">Home</a>
+ <div id="mobile-menu" class="hidden lg:hidden bg-[#0a0a0a] border-t border-gray-800 h-screen overflow-y-auto pb-32 fixed w-full top-20 left-0 z-40">
+    <div class="flex flex-col px-6 py-8 space-y-2">
+      <a href="/" class="text-lg font-bold text-white border-b border-gray-800 py-3">Home</a>
       
-      <div class="border-b border-gray-800 pb-3">
-        <a href="/products" class="text-lg font-bold text-white mb-2 block">Products</a>
-        <div class="flex flex-col pl-4 space-y-2">
-          {categories.map((cat: any) => (
-            <a href={`/products?cat=${cat.value}`} class="text-gray-400">{cat.title}</a>
+      <div class="border-b border-gray-800 py-3">
+        <button class="mobile-dropdown-btn w-full flex justify-between items-center text-lg font-bold text-white focus:outline-none">
+          <span>Products</span>
+          <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div class="mobile-dropdown-content hidden flex-col pl-4 mt-3 space-y-3">
+          <a href="/products" class="text-sm text-[#D4AF37] font-bold">All Collection</a>
+          {categories && categories.map((cat: any) => (
+            <a href={`/products?cat=${cat.value}`} class="text-sm text-gray-400">{cat.title}</a>
           ))}
         </div>
       </div>
       
-      <div class="border-b border-gray-800 pb-3">
-        <span class="text-lg font-bold text-[#D4AF37] mb-2 block">Global Manufacturing</span>
-        <div class="flex flex-col pl-4 space-y-2">
-          <a href="/manufacturing/china" class="text-gray-300">China Base (R&D)</a>
-          <a href="/manufacturing/indonesia" class="text-gray-300">Indonesia Base</a>
-          <a href="/manufacturing/bangladesh" class="text-gray-300">Bangladesh Base</a>
+      <div class="border-b border-gray-800 py-3">
+        <button class="mobile-dropdown-btn w-full flex justify-between items-center text-lg font-bold text-white focus:outline-none">
+          <span>Manufacturing</span>
+          <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div class="mobile-dropdown-content hidden flex-col pl-4 mt-3 space-y-3">
+          <a href="/manufacturing/china" class="text-sm text-gray-400">China Base (R&D)</a>
+          <a href="/manufacturing/indonesia" class="text-sm text-gray-400">Indonesia Base</a>
+          <a href="/manufacturing/bangladesh" class="text-sm text-gray-400">Bangladesh Base</a>
         </div>
       </div>
       
-      <a href="/compliance" class="text-lg font-bold text-white border-b border-gray-800 pb-3">Compliance & ESG</a>
-      <a href="/rd" class="text-lg font-bold text-white border-b border-gray-800 pb-3">R&D & Customization</a>
+      <a href="/compliance" class="text-lg font-bold text-white border-b border-gray-800 py-3">Compliance & ESG</a>
+      <a href="/rd" class="text-lg font-bold text-white border-b border-gray-800 py-3">R&D</a>
+      
+      <div class="border-b border-gray-800 py-3">
+        <button class="mobile-dropdown-btn w-full flex justify-between items-center text-lg font-bold text-white focus:outline-none">
+          <span>News & Blog</span>
+          <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div class="mobile-dropdown-content hidden flex-col pl-4 mt-3 space-y-3">
+          <a href="/news" class="text-sm text-gray-400">Company News</a>
+          <a href="/blog" class="text-sm text-gray-400">Industry Blog</a>
+        </div>
+      </div>
+
+      <a href="/faq" class="text-lg font-bold text-white border-b border-gray-800 py-3">FAQ</a>
     </div>
   </div>
 </header>
 
 <script is:inline>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  const iconPath = document.getElementById('menu-icon-path');
+  document.addEventListener('DOMContentLoaded', () => {
+      // 1. 处理汉堡包菜单打开/关闭
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      const iconPath = document.getElementById('menu-icon-path');
 
-  if(btn && menu && iconPath) {
-      btn.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-        if (menu.classList.contains('hidden')) {
-          iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
-        } else {
-          iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
-        }
+      if(btn && menu && iconPath) {
+          btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden'); // 防止背景穿透滑动
+            if (menu.classList.contains('hidden')) {
+              iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+            } else {
+              iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+            }
+          });
+      }
+
+      // 2. 处理手机端子菜单手风琴折叠
+      const dropdownBtns = document.querySelectorAll('.mobile-dropdown-btn');
+      dropdownBtns.forEach(dropBtn => {
+          dropBtn.addEventListener('click', () => {
+              const content = dropBtn.nextElementSibling;
+              const svg = dropBtn.querySelector('svg');
+              
+              // 切换隐藏/显示
+              content.classList.toggle('hidden');
+              content.classList.toggle('flex');
+              
+              // 旋转箭头
+              svg.classList.toggle('rotate-180');
+              svg.classList.toggle('text-[#D4AF37]');
+          });
       });
-  }
+  });
 </script>
