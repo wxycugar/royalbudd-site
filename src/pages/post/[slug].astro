@@ -1,0 +1,63 @@
+---
+// 文件：src/pages/post/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { PortableText } from "astro-portabletext";
+import PortableTextImage from '../../components/PortableTextImage.astro';
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) { return source ? builder.image(source).url() : ''; }
+
+export async function getStaticPaths() {
+  const posts = await sanityClient.fetch(`*[_type == "post"]{ "params": { "slug": slug.current } }`);
+  return posts;
+}
+
+const { slug } = Astro.params;
+const post = await sanityClient.fetch(`*[_type == "post" && slug.current == $slug][0]`, { slug });
+
+if (!post) return Astro.redirect('/404');
+---
+
+<Layout title={`${post.title} - Royalbudd`}>
+  <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
+    <div class="container mx-auto px-6 max-w-4xl">
+      
+      <a href={post.postType === 'news' ? '/news' : '/blog'} class="inline-flex items-center text-gray-500 hover:text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-10 transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to {post.postType === 'news' ? 'News' : 'Blog'}
+      </a>
+
+      <header class="mb-12">
+        {post.publishedAt && <time class="text-[#D4AF37] font-bold text-sm tracking-widest uppercase block mb-4">{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>}
+        <h1 class="text-3xl md:text-5xl font-black text-white leading-tight mb-8">{post.title}</h1>
+        {post.mainImage && (
+          <div class="aspect-video w-full rounded-3xl overflow-hidden border border-gray-800">
+            <img src={urlFor(post.mainImage)} alt={post.title} class="w-full h-full object-cover" />
+          </div>
+        )}
+      </header>
+
+      <article class="royal-rich-text">
+        {post.body && (
+           <PortableText value={post.body} components={{ type: { image: PortableTextImage } }} />
+        )}
+      </article>
+
+    </div>
+  </main>
+  <Footer />
+
+  <style is:global>
+    /* 继承我们在产品详情页写过的漂亮银白色富文本样式 */
+    .royal-rich-text { color: #d1d5db; line-height: 1.8; font-size: 1.125rem; }
+    .royal-rich-text p { margin-bottom: 1.5em; }
+    .royal-rich-text h2 { color: #ffffff; font-weight: bold; margin-top: 2em; margin-bottom: 1em; font-size: 1.8rem; }
+    .royal-rich-text h3 { color: #ffffff; font-weight: bold; margin-top: 1.5em; margin-bottom: 1em; font-size: 1.5rem; }
+    .royal-rich-text ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
+    .royal-rich-text a { color: #D4AF37; text-decoration: underline; text-underline-offset: 4px; }
+    .royal-rich-text img { border-radius: 1rem; margin-top: 2em; margin-bottom: 2em; }
+  </style>
+</Layout>
