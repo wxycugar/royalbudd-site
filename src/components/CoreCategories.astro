@@ -45,15 +45,15 @@ try {
             
             {cat.image && (
               <img 
-  src={builder.image(category.image).format('webp').width(800).quality(80).url()} 
+  src={builder.image(cat.image).format('webp').width(800).quality(80).url()} 
   srcset={`
-    ${builder.image(category.image).format('webp').width(400).quality(80).url()} 400w,
-    ${builder.image(category.image).format('webp').width(600).quality(80).url()} 600w,
-    ${builder.image(category.image).format('webp').width(800).quality(80).url()} 800w
+    ${builder.image(cat.image).format('webp').width(400).quality(80).url()} 400w,
+    ${builder.image(cat.image).format('webp').width(600).quality(80).url()} 600w,
+    ${builder.image(cat.image).format('webp').width(800).quality(80).url()} 800w
   `}
   sizes="(max-width: 768px) 100vw, 25vw"
   loading="lazy"
-  alt={category.title} 
+  alt={cat.title} 
   class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
 />
             )}
