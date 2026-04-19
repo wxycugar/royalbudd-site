@@ -1,0 +1,76 @@
+---
+// 文件：src/pages/faq.astro
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { sanityClient } from "sanity:client";
+
+// 抓取后台 FAQ 数据
+const query = `*[_type == "faqPage"][0]`;
+const pageData = await sanityClient.fetch(query) || {};
+
+const heroTitle = pageData.heroTitle || "Frequently Asked Questions";
+const faqs = pageData.faqs && pageData.faqs.length > 0 ? pageData.faqs : [
+  { question: "What is your Minimum Order Quantity (MOQ)?", answer: "Our standard MOQ is 300 pieces per style/color. However, for specialized tactical or cooler bags requiring custom fabrics, the MOQ may vary." },
+  { question: "What is your sample lead time?", answer: "Thanks to our Jiangmen R&D Hub, we can turnaround physical prototypes in 7 to 10 days once the CAD design and materials are confirmed." },
+  { question: "Do you offer OEM and ODM services?", answer: "Yes, 100%. We provide full-scale OEM manufacturing based on your tech packs, as well as ODM services where our in-house design team develops collections for your brand." },
+  { question: "Where are your factories located?", answer: "Our R&D and complex prototyping center is in Jiangmen, China. Our mass production facilities are strategically located in Indonesia and Bangladesh to offer zero-tariff and GSP advantages." }
+];
+---
+
+<Layout title="FAQ - Royalbudd Bag Manufacturing">
+  <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
+    <div class="container mx-auto px-6 max-w-4xl">
+      
+      <div class="text-center mb-16">
+        <span class="text-[#D4AF37] text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Knowledge Base</span>
+        <h1 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">{heroTitle}</h1>
+      </div>
+
+      <div class="space-y-4" id="faq-container">
+        {faqs.map((faq: any, index: number) => (
+          <div class="bg-[#111111] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 faq-item">
+            <button class="w-full text-left px-8 py-6 flex justify-between items-center focus:outline-none faq-btn">
+              <span class="text-lg font-bold text-gray-200 pr-8">{faq.question}</span>
+              <svg class="w-6 h-6 text-[#D4AF37] transform transition-transform duration-300 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="px-8 pb-6 text-gray-400 leading-relaxed hidden faq-answer">
+              {faq.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </main>
+  <FinalCTA />
+  <Footer />
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const btn = item.querySelector('.faq-btn');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+
+        btn.addEventListener('click', () => {
+          const isOpen = !answer.classList.contains('hidden');
+          
+          // 先关闭所有其他的
+          document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+          document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotate-180'));
+          document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('border-[#D4AF37]/50'));
+
+          // 如果原来没打开，就打开当前这个
+          if (!isOpen) {
+            answer.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+            item.classList.add('border-[#D4AF37]/50');
+          }
+        });
+      });
+    });
+  </script>
+</Layout>

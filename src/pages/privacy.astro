@@ -1,0 +1,58 @@
+---
+// 文件：src/pages/privacy.astro
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Privacy Policy - Royalbudd">
+  <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
+    <div class="container mx-auto px-6 max-w-4xl">
+      
+      <div class="mb-16 border-b border-gray-900 pb-10">
+        <h1 class="text-4xl font-black text-white uppercase tracking-tighter mb-4">Privacy Policy</h1>
+        <p class="text-gray-500 text-sm">Last Updated: April 2026</p>
+      </div>
+
+      <article class="royal-rich-text text-gray-400">
+        <p>At <strong>Royalbudd</strong>, we respect your privacy and are committed to protecting your personal and corporate data. This Privacy Policy outlines how we collect, use, and safeguard information when you visit our website or engage with our B2B manufacturing services.</p>
+
+        <h3>1. Information We Collect</h3>
+        <p>As a B2B bag manufacturing supply chain, we primarily collect information relevant to business transactions and inquiries, including:</p>
+        <ul>
+          <li><strong>Contact Information:</strong> Name, company name, email address, phone number, and WhatsApp details provided via our inquiry forms.</li>
+          <li><strong>Business Data:</strong> Tech packs, design files, NDAs, and production requirements submitted for OEM/ODM quoting.</li>
+          <li><strong>Technical Data:</strong> IP addresses, browser types, and general site usage metrics to improve our digital experience.</li>
+        </ul>
+
+        <h3>2. How We Use Your Information</h3>
+        <p>The information collected is exclusively used to facilitate our manufacturing partnership:</p>
+        <ul>
+          <li>To process sample requests and provide accurate FOB quotes.</li>
+          <li>To communicate production updates from our facilities in China, Indonesia, and Bangladesh.</li>
+          <li>To enforce Non-Disclosure Agreements (NDAs) ensuring your designs remain strictly confidential.</li>
+        </ul>
+
+        <h3>3. Data Protection & Confidentiality</h3>
+        <p>Your intellectual property is our top priority. We implement robust physical and digital security measures across our R&D hub in Jiangmen and our overseas mass-production bases. We do not sell, rent, or trade your corporate information or product designs to any third parties.</p>
+
+        <h3>4. Third-Party Disclosures</h3>
+        <p>We may share necessary logistical details with trusted global freight forwarders and logistics partners solely for the purpose of shipping physical samples or bulk orders to your destination.</p>
+
+        <h3>5. Contact Us</h3>
+        <p>If you have any questions regarding this Privacy Policy or wish to update your corporate data on our systems, please contact our compliance team at <strong>compliance@royalbudd.com</strong>.</p>
+      </article>
+
+    </div>
+  </main>
+  <Footer />
+
+  <style is:global>
+    /* 复用富文本排版样式 */
+    .royal-rich-text { line-height: 1.8; font-size: 1rem; }
+    .royal-rich-text p { margin-bottom: 1.5em; }
+    .royal-rich-text h3 { color: #ffffff; font-weight: bold; margin-top: 2em; margin-bottom: 1em; font-size: 1.25rem; }
+    .royal-rich-text ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
+    .royal-rich-text li { margin-bottom: 0.5em; }
+    .royal-rich-text strong { color: #ffffff; }
+  </style>
+</Layout>

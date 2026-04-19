@@ -15,18 +15,18 @@ const currentYear = new Date().getFullYear();
           A leading global bag manufacturer specializing in high-performance outdoor gear, maternity bags, and premium urban lifestyle accessories.
         </p>
         <div class="flex gap-4">
-          <div class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-[#D4AF37] transition-colors cursor-pointer">In</div>
-          <div class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-[#D4AF37] transition-colors cursor-pointer">Fb</div>
+          <div class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-[#D4AF37] transition-colors cursor-pointer text-white">In</div>
+          <div class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-[#D4AF37] transition-colors cursor-pointer text-white">Fb</div>
         </div>
       </div>
 
       <div>
         <h4 class="text-white font-bold mb-6 uppercase text-sm tracking-widest">Navigation</h4>
         <ul class="space-y-4 text-sm">
-          <li><a href="#" class="hover:text-[#D4AF37] transition-colors">Home</a></li>
-          <li><a href="#global-footprint" class="hover:text-[#D4AF37] transition-colors">Supply Chain</a></li>
-          <li><a href="#categories" class="hover:text-[#D4AF37] transition-colors">Products</a></li>
-          <li><a href="#strength" class="hover:text-[#D4AF37] transition-colors">Manufacturing</a></li>
+          <li><a href="/products" class="hover:text-[#D4AF37] transition-colors">Products & Categories</a></li>
+          <li><a href="/rd" class="hover:text-[#D4AF37] transition-colors">R&D Center (China)</a></li>
+          <li><a href="/compliance" class="hover:text-[#D4AF37] transition-colors">Compliance & ESG</a></li>
+          <li><a href="/faq" class="hover:text-[#D4AF37] transition-colors">FAQ & Support</a></li>
         </ul>
       </div>
 
@@ -50,15 +50,20 @@ const currentYear = new Date().getFullYear();
     </div>
 
     <div class="pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-6">
-      <p class="text-xs">
-        &copy; {currentYear} Royalbudd Manufacturing Group. All Rights Reserved.
-      </p>
-      <div class="flex items-center gap-6 opacity-50 grayscale hover:grayscale-0 transition-all">
+      
+      <div class="text-xs flex flex-col md:flex-row items-center gap-3 text-center md:text-left">
+        <span>&copy; {currentYear} Royalbudd Manufacturing Group. All Rights Reserved.</span>
+        <span class="hidden md:inline text-gray-700">|</span>
+        <a href="/privacy" class="hover:text-[#D4AF37] transition-colors">Privacy Policy</a>
+      </div>
+
+      <div class="flex items-center gap-4 md:gap-6 opacity-50 grayscale hover:grayscale-0 transition-all">
         <span class="text-[10px] font-bold border border-gray-700 px-2 py-1">ISO 9001</span>
         <span class="text-[10px] font-bold border border-gray-700 px-2 py-1">BSCI</span>
         <span class="text-[10px] font-bold border border-gray-700 px-2 py-1">SEDEX</span>
         <span class="text-[10px] font-bold border border-gray-700 px-2 py-1">GRS</span>
       </div>
+
     </div>
   </div>
 </footer>
