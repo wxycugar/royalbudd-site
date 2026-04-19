@@ -1,0 +1,105 @@
+---
+// 文件：src/pages/compliance.astro
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) { return source ? builder.image(source).url() : ''; }
+
+// 抓取后台数据
+const query = `*[_type == "compliancePage"][0]`;
+const pageData = await sanityClient.fetch(query) || {};
+
+const heroTitle = pageData.heroTitle || "Uncompromising Ethics & Quality.";
+const heroSub = pageData.heroSub || "Global sourcing demands absolute transparency. Royalbudd operates under the strictest international standards for social compliance, quality management, and environmental sustainability.";
+
+// 默认占位数据
+const certs = pageData.certifications && pageData.certifications.length > 0 ? pageData.certifications : [
+  { title: 'BSCI', desc: 'Social Compliance', image: null },
+  { title: 'SEDEX', desc: 'Ethical Trade', image: null },
+  { title: 'ISO 9001:2015', desc: 'Quality Management', image: null },
+  { title: 'GRS', desc: 'Sustainable Materials', image: null }
+];
+
+const esg = pageData.esgInitiatives && pageData.esgInitiatives.length > 0 ? pageData.esgInitiatives : [
+  { title: 'Sustainable Material Sourcing', desc: 'We offer an extensive library of GRS-certified recycled RPET fabrics, drastically reducing carbon footprint without compromising durability.', image: null },
+  { title: 'Fair Labor & Worker Welfare', desc: 'Our facilities in China, Indonesia, and Bangladesh strictly adhere to local labor laws, zero-tolerance for forced labor, and prioritize a safe, ergonomic working environment.', image: null }
+];
+---
+
+<Layout title="Compliance & ESG - Royalbudd">
+  <main class="bg-[#0a0a0a] min-h-screen">
+    
+    <section class="relative pt-32 pb-20 overflow-hidden border-b border-gray-900">
+      <div class="container mx-auto px-6 relative z-10 text-center">
+        <span class="inline-block py-1.5 px-4 border border-green-500/40 bg-green-500/5 text-green-500 text-[10px] font-black tracking-[0.3em] uppercase rounded-full mb-8">
+            Verified Global Supplier
+        </span>
+        <h1 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight max-w-4xl mx-auto uppercase">
+            {heroTitle}
+        </h1>
+        <p class="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
+            {heroSub}
+        </p>
+      </div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-green-900/10 blur-[120px] rounded-full pointer-events-none"></div>
+    </section>
+
+    <section class="py-24 bg-[#0d0d0d]">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-black text-white uppercase tracking-wider">Global Certifications</h2>
+          <div class="w-16 h-1 bg-[#D4AF37] mx-auto mt-6"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {certs.map((cert) => (
+            <div class="bg-[#111111] border border-gray-800 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-[#D4AF37]/40 transition-colors group">
+              <div class="w-20 h-20 mb-6 flex items-center justify-center bg-gray-900 rounded-full p-4 group-hover:scale-110 transition-transform">
+                {cert.image ? (
+                  <img src={urlFor(cert.image)} alt={cert.title} class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500" />
+                ) : (
+                  <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                )}
+              </div>
+              <h3 class="text-white font-bold text-lg mb-1">{cert.title}</h3>
+              <p class="text-gray-500 text-xs uppercase tracking-widest">{cert.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 border-t border-gray-900">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col gap-20">
+          {esg.map((item, index) => (
+            <div class={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 items-center`}>
+              <div class="w-full md:w-1/2 aspect-video bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden relative group">
+                 {item.image ? (
+                   <img src={urlFor(item.image)} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
+                 ) : (
+                   <div class="absolute inset-0 flex items-center justify-center text-gray-700 uppercase tracking-widest text-xs italic">ESG Initiative Image</div>
+                 )}
+              </div>
+              <div class="w-full md:w-1/2">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] mb-6">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h3 class="text-3xl font-black text-white mb-6 leading-tight">{item.title}</h3>
+                <p class="text-gray-400 text-lg leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <FinalCTA />
+  </main>
+  <Footer />
+</Layout>
