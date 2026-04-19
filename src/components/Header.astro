@@ -87,11 +87,12 @@ const categories = await sanityClient.fetch(`*[_type == "category"] | order(_cre
           <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         <div class="mobile-dropdown-content hidden flex-col pl-4 mt-3 space-y-3">
-          <a href="/products" class="text-sm text-[#D4AF37] font-bold">All Collection</a>
-          {categories && categories.map((cat: any) => (
-            <a href={`/products?cat=${cat.value}`} class="text-sm text-gray-400">{cat.title}</a>
-          ))}
-        </div>
+  <a href="/products" class="text-sm text-[#D4AF37] font-bold">All Collection</a>
+  <a href="/products?cat=backpacks" class="text-sm text-gray-400">Backpacks</a>
+  <a href="/products?cat=cooler-bags" class="text-sm text-gray-400">Cooler Bags</a>
+  <a href="/products?cat=leather-bags" class="text-sm text-gray-400">Leather Bags</a>
+  <a href="/products?cat=toolkit" class="text-sm text-gray-400">Toolkit</a>
+</div>
       </div>
       
       <div class="border-b border-gray-800 py-3">
