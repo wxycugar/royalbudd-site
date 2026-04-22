@@ -1,0 +1,40 @@
+---
+// src/components/StickyCTA.astro
+// 这里可以预留 WhatsApp 号码变量
+const whatsappNumber = "8618872711490"; // 陛下请在此处替换为您真实的 WhatsApp 号码
+const whatsappMessage = encodeURIComponent("Hello, I'm interested in your bag manufacturing services.");
+---
+
+<div class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-[999] animate-fade-in-up">
+  <div class="bg-[#111111]/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-2">
+    
+    <a 
+      href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+      target="_blank"
+      class="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-xl font-bold text-sm active:scale-95 transition-transform"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.29-4.143c1.589.951 3.227 1.456 4.934 1.457 5.233 0 9.491-4.258 9.493-9.491.001-2.533-1.003-4.915-2.822-6.733-1.82-1.817-4.201-2.821-6.738-2.821-5.231 0-9.49 4.256-9.492 9.491-.001 1.9.544 3.46 1.576 4.955l-1.031 3.766 3.882-1.018z"/>
+      </svg>
+      WhatsApp
+    </a>
+
+    <a 
+      href="/contact" 
+      class="flex-[1.5] flex items-center justify-center bg-[#D4AF37] text-gray-900 py-3 rounded-xl font-black text-sm uppercase tracking-wider active:scale-95 transition-transform"
+    >
+      Inquire Now
+    </a>
+  </div>
+</div>
+
+<style>
+  /* 增加一个入场小动画，让它更吸睛 */
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+</style>
