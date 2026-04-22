@@ -5,6 +5,8 @@
 import '../styles/global.css';
 // 2. 引入我们刚刚做好的全局导航栏组件
 import Header from '../components/Header.astro';
+// 3. ✨ 新增：引入悬浮询盘按钮组件
+import StickyCTA from '../components/StickyCTA.astro';
 
 interface Props {
   title: string;
@@ -28,6 +30,8 @@ const { title } = Astro.props;
         <Header />
         
         <slot />
+        
+        <StickyCTA />
     </body>
 </html>
 
