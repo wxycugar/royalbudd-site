@@ -1,7 +1,7 @@
 ---
 // 文件：src/pages/compliance.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
 import FinalCTA from '../components/FinalCTA.astro';
 
 import { sanityClient } from "sanity:client";
@@ -13,6 +13,10 @@ function urlFor(source) { return source ? builder.image(source).url() : ''; }
 // 抓取后台数据
 const query = `*[_type == "compliancePage"][0]`;
 const pageData = await sanityClient.fetch(query) || {};
+
+// ✨ 核心 SEO 提取与保底逻辑
+const seo = pageData.seo || {};
+const pageTitle = seo.metaTitle || "Compliance & ESG | Royalbudd Bag Manufacturing";
 
 const heroTitle = pageData.heroTitle || "Uncompromising Ethics & Quality.";
 const heroSub = pageData.heroSub || "Global sourcing demands absolute transparency. Royalbudd operates under the strictest international standards for social compliance, quality management, and environmental sustainability.";
@@ -31,7 +35,11 @@ const esg = pageData.esgInitiatives && pageData.esgInitiatives.length > 0 ? page
 ];
 ---
 
-<Layout title="Compliance & ESG - Royalbudd">
+<Layout 
+  title={pageTitle}
+  description={seo.metaDescription}
+  keywords={seo.keywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen">
     
     <section class="relative pt-32 pb-20 overflow-hidden border-b border-gray-900">
@@ -101,5 +109,5 @@ const esg = pageData.esgInitiatives && pageData.esgInitiatives.length > 0 ? page
 
     <FinalCTA />
   </main>
-  <Footer />
-</Layout>
+  
+  </Layout>

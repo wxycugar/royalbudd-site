@@ -9,11 +9,19 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro'; // <--- 臣帮您把丢失的页脚找回来了
 import StickyCTA from '../components/StickyCTA.astro';
 
+// ✨ 新增：定义 Layout 能够接收的 SEO 属性 (用问号代表可选，页面不传也不会报错)
 interface Props {
-  title: string;
+  title?: string;
+  description?: string;
+  keywords?: string;
 }
 
-const { title } = Astro.props;
+// ✨ 新增：接收从各个页面传过来的数据，并设置极其专业的“保底默认值”
+const { 
+  title = "Royalbudd | Global Bag Manufacturer & OEM Backpack Factory", 
+  description = "Defining Bag Aesthetics through 20 Years of Global Craftsmanship. We empower global brands with agile supply chains and scalable bases in Indonesia, Bangladesh and China.", 
+  keywords = "bag manufacturer, custom bags, OEM backpack factory, Indonesia bag supplier, Bangladesh duty free bags"
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -24,8 +32,16 @@ const { title } = Astro.props;
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="generator" content={Astro.generator} />
+        
         <title>{title}</title>
-    </head>
+        <meta name="description" content={description} />
+        {keywords && <meta name="keywords" content={keywords} />}
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content="Royalbudd" />
+        </head>
     <body class="bg-[#0a0a0a] pt-20 flex flex-col min-h-screen text-white">
         
         <Header />

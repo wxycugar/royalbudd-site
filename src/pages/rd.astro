@@ -1,7 +1,6 @@
 ---
 // 文件：src/pages/rd.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 
 // 引入 Sanity 客户端和图片解析器
@@ -18,6 +17,10 @@ function urlFor(source) {
 const query = `*[_type == "rdPage"][0]`;
 const pageData = await sanityClient.fetch(query) || {};
 
+// ✨ 核心 SEO 提取与保底逻辑
+const seo = pageData.seo || {};
+const pageTitle = seo.metaTitle || "R&D Center | The Innovation Brain of Royalbudd";
+
 // 2. 智能容错处理 (如果后台还没来得及填数据，就先用我们之前写的霸气文案顶上)
 const heroTitle = pageData.heroTitle || "ENGINEERED TO PERFORM.";
 const heroSub = pageData.heroSub || "We merge advanced industrial aesthetics with rigorous structural engineering. Our R&D center is where complex global sourcing challenges meet precise manufacturing solutions.";
@@ -33,11 +36,13 @@ const processes = pageData.process && pageData.process.length > 0 ? pageData.pro
     {step: '03', title: 'Component Sourcing', desc: 'Global sourcing of hardware and custom fabrics.'},
     {step: '04', title: 'Master Sample', desc: 'Physical verification of aesthetics and durability.'}
 ];
-
-const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
 ---
 
-<Layout title={pageTitle}>
+<Layout 
+  title={pageTitle}
+  description={seo.metaDescription}
+  keywords={seo.keywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen">
     
     <section class="relative pt-32 pb-20 overflow-hidden border-b border-gray-900">
@@ -100,5 +105,5 @@ const pageTitle = "R&D Center | The Innovation Brain of Royalbudd";
 
     <FinalCTA />
   </main>
-  <Footer />
-</Layout>
+  
+  </Layout>

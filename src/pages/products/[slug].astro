@@ -1,7 +1,6 @@
 ---
 // 文件：src/pages/products/[slug].astro
 import Layout from '../../layouts/Layout.astro';
-import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 
 import { PortableText } from "astro-portabletext";
@@ -19,15 +18,25 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+
+// 抓取当前产品的所有数据（包括后台填写的 seo 对象）
 const query = `*[_type == "product" && slug.current == $slug][0]`;
 const product = await sanityClient.fetch(query, { slug });
 
 if (!product) return Astro.redirect('/404');
 
 const galleryImages = product.gallery ? [product.mainImage, ...product.gallery] : [product.mainImage];
+
+// ✨ 核心 SEO 提取与保底逻辑
+const seo = product.seo || {};
+const pageTitle = seo.metaTitle || `${product.title} - Royalbudd`;
 ---
 
-<Layout title={`${product.title} - Royalbudd`}>
+<Layout 
+  title={pageTitle}
+  description={seo.metaDescription}
+  keywords={seo.keywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-28 pb-24">
     <div class="container mx-auto px-6 max-w-7xl">
       
@@ -154,7 +163,6 @@ const galleryImages = product.gallery ? [product.mainImage, ...product.gallery] 
   </main>
 
   <FinalCTA />
-  <Footer />
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
@@ -216,9 +224,8 @@ const galleryImages = product.gallery ? [product.mainImage, ...product.gallery] 
     .royal-rich-text li { margin-bottom: 0.5em; }
     .royal-rich-text strong { color: #ffffff; font-weight: 800; }
     .royal-rich-text a { color: #D4AF37; text-decoration: underline; text-underline-offset: 4px; }
-    /* ... 之前的 royal-rich-text 样式保留 ... */
 
-  /* 【新增】：强制干掉富文本里图片可能自带的任何边距、间隙和圆角 */
+  /* 强制干掉富文本里图片可能自带的任何边距、间隙和圆角 */
   .royal-rich-text img {
       margin: 0 !important;
       padding: 0 !important;
@@ -227,10 +234,10 @@ const galleryImages = product.gallery ? [product.mainImage, ...product.gallery] 
       width: 100% !important;
   }
   
-  /* 【新增】：如果 Sanity 把图片自动包在了段落 <p> 里，把这个段落的底部边距也强制清零 */
+  /* 如果 Sanity 把图片自动包在了段落 <p> 里，把这个段落的底部边距也强制清零 */
   .royal-rich-text p:has(img) {
       margin: 0 !important;
       padding: 0 !important;
   }
   </style>  
-</Layout>     
+</Layout>

@@ -1,13 +1,16 @@
 ---
 // 文件：src/pages/faq.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 import { sanityClient } from "sanity:client";
 
 // 抓取后台 FAQ 数据
 const query = `*[_type == "faqPage"][0]`;
 const pageData = await sanityClient.fetch(query) || {};
+
+// ✨ 核心 SEO 提取与保底逻辑
+const seo = pageData.seo || {};
+const pageTitle = seo.metaTitle || "FAQ & Knowledge Base | Royalbudd Bag Manufacturing";
 
 const heroTitle = pageData.heroTitle || "Frequently Asked Questions";
 const faqs = pageData.faqs && pageData.faqs.length > 0 ? pageData.faqs : [
@@ -18,7 +21,11 @@ const faqs = pageData.faqs && pageData.faqs.length > 0 ? pageData.faqs : [
 ];
 ---
 
-<Layout title="FAQ - Royalbudd Bag Manufacturing">
+<Layout 
+  title={pageTitle}
+  description={seo.metaDescription}
+  keywords={seo.keywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
     <div class="container mx-auto px-6 max-w-4xl">
       
@@ -43,9 +50,8 @@ const faqs = pageData.faqs && pageData.faqs.length > 0 ? pageData.faqs : [
 
     </div>
   </main>
+  
   <FinalCTA />
-  <Footer />
-
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
       const faqItems = document.querySelectorAll('.faq-item');

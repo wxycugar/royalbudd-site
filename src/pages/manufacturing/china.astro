@@ -1,13 +1,20 @@
 ---
 // 文件：src/pages/manufacturing/china.astro
 import Layout from '../../layouts/Layout.astro';
-import Footer from '../../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
 import FinalCTA from '../../components/FinalCTA.astro';
 
-const pageTitle = "China R&D Hub | Royalbudd Global Manufacturing";
+// ✨ 新增：为中国研发枢纽页硬编码极具竞争力的 B2B SEO 数据
+const pageTitle = "China R&D Hub & Material Sourcing Center | Royalbudd Bag Manufacturing";
+const pageDesc = "Royalbudd's China Hub in Jiangmen is the nerve center of our global supply chain. We offer 7-day agile bag prototyping, CAD modeling, and centralized raw material sourcing.";
+const pageKeywords = "China bag R&D center, bag prototyping, custom backpack sample, bag material sourcing, Jiangmen bag factory, OEM bag design, centralized supply chain";
 ---
 
-<Layout title={pageTitle}>
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={pageKeywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen">
     
     <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-900">
@@ -128,5 +135,5 @@ const pageTitle = "China R&D Hub | Royalbudd Global Manufacturing";
 
     <FinalCTA />
   </main>
-  <Footer />
-</Layout>
+  
+  </Layout>

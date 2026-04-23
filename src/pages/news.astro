@@ -1,7 +1,8 @@
 ---
 // 文件：src/pages/news.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
+
 import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
@@ -10,9 +11,18 @@ function urlFor(source) { return source ? builder.image(source).url() : ''; }
 
 // 核心：只抓取 postType == 'news' 的文章
 const posts = await sanityClient.fetch(`*[_type == "post" && postType == "news"] | order(publishedAt desc)`);
+
+// ✨ 新增：为新闻聚合页硬编码专属的 B2B SEO 数据
+const pageTitle = "Company News & Official Announcements | Royalbudd";
+const pageDesc = "Stay updated with the latest company news, global footprint expansions, and official announcements from Royalbudd, your trusted global bag manufacturing partner.";
+const pageKeywords = "Royalbudd news, bag manufacturer updates, factory announcements, OEM bag supplier news, B2B backpack factory";
 ---
 
-<Layout title="Company News - Royalbudd">
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={pageKeywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
     <div class="container mx-auto px-6 max-w-7xl">
       
@@ -41,5 +51,5 @@ const posts = await sanityClient.fetch(`*[_type == "post" && postType == "news"]
 
     </div>
   </main>
-  <Footer />
-</Layout>
+  
+  </Layout>

@@ -1,7 +1,7 @@
 ---
 // 文件：src/pages/manufacturing/bangladesh.astro
 import Layout from '../../layouts/Layout.astro';
-import Footer from '../../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
 import FinalCTA from '../../components/FinalCTA.astro';
 
 import { sanityClient } from "sanity:client";
@@ -22,10 +22,18 @@ try {
   console.error("CMS数据连接失败:", error);
 }
 
-const pageTitle = "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd";
+// ✨ 核心 SEO 提取与保底逻辑
+const seo = pageData?.seo || {};
+const pageTitle = seo.metaTitle || "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd";
+const pageDesc = seo.metaDescription || "Royalbudd's Bangladesh bag manufacturing facilities offer massive volume production, extreme cost optimization, and duty-free access to EU/UK markets via EBA.";
+const pageKeywords = seo.keywords || "Bangladesh bag manufacturer, EU duty free backpacks, EBA advantage, large volume bag factory, OEM bag supplier";
 ---
 
-<Layout title={pageTitle}>
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={pageKeywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen">
     
     <section class="relative min-h-[92vh] flex items-center pt-24 pb-12 overflow-hidden border-b border-gray-900">
@@ -230,5 +238,4 @@ const pageTitle = "Bangladesh Base - Ultimate Cost Efficiency & EBA | Royalbudd"
 
     <FinalCTA />
   </main>
-  <Footer />
-</Layout>
+  </Layout>

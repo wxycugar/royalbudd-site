@@ -1,28 +1,50 @@
 ---
-// 1. 【打招呼区】在这里告诉首页，你要用到哪些“零件”
+// 文件：src/pages/index.astro
+
+// 1. 【零件引入区】
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import TrustBar from '../components/TrustBar.astro';
-import GlobalFootprint from '../components/GlobalFootprint.astro'; // <-- 就是缺了这句
-import CoreCategories from '../components/CoreCategories.astro'; // <--- 新增这行
-import ManufacturingStrength from '../components/ManufacturingStrength.astro'; // <--- 新增这行
-import FinalCTA from '../components/FinalCTA.astro'; // <--- 新增
-import Footer from '../components/Footer.astro';     // <--- 新增
+import GlobalFootprint from '../components/GlobalFootprint.astro';
+import CoreCategories from '../components/CoreCategories.astro';
+import ManufacturingStrength from '../components/ManufacturingStrength.astro';
+import FinalCTA from '../components/FinalCTA.astro';
 
-// 这里可以定义首页的 SEO 标题
-const pageTitle = "Royalbudd | Global Bag Manufacturing - China R&D & SE Asia Production";
+// ✨ 新增：引入 Sanity 客户端，准备抓取后台数据
+import { sanityClient } from "sanity:client";
+
+// ✨ 新增：去后台“SEO 弹药库”抓取首页设置好的数据
+const homeData = await sanityClient.fetch(`
+  *[_type == "homePage"][0]{
+    seo {
+      metaTitle,
+      metaDescription,
+      keywords
+    }
+  }
+`);
+
+// 提取 SEO 数据（如果后台没填，Layout 里的“保底默认词”会自动顶上）
+const seo = homeData?.seo || {};
 ---
 
-<Layout title={pageTitle}>
+<Layout 
+  title={seo.metaTitle} 
+  description={seo.metaDescription} 
+  keywords={seo.keywords}
+>
   <main>
     <Hero />
+    
     <TrustBar />
+    
     <GlobalFootprint />
+    
     <CoreCategories />
+    
     <ManufacturingStrength />
     
     <FinalCTA />
   </main>
 
-  <Footer />
-</Layout>
+  </Layout>

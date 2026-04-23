@@ -1,7 +1,7 @@
 ---
 // 文件：src/pages/post/[slug].astro
 import Layout from '../../layouts/Layout.astro';
-import Footer from '../../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
 import { PortableText } from "astro-portabletext";
 import PortableTextImage from '../../components/PortableTextImage.astro';
 import { sanityClient } from "sanity:client";
@@ -19,9 +19,19 @@ const { slug } = Astro.params;
 const post = await sanityClient.fetch(`*[_type == "post" && slug.current == $slug][0]`, { slug });
 
 if (!post) return Astro.redirect('/404');
+
+// ✨ 核心 SEO 提取与智能保底逻辑
+const seo = post.seo || {};
+const pageTitle = seo.metaTitle || `${post.title} - Royalbudd`;
+// 如果没填 SEO 描述，优先使用文章摘要(excerpt)，否则使用通用兜底文案
+const pageDesc = seo.metaDescription || post.excerpt || `Read the latest insights and updates about ${post.title} from Royalbudd, your trusted global bag manufacturer.`;
 ---
 
-<Layout title={`${post.title} - Royalbudd`}>
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={seo.keywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
     <div class="container mx-auto px-6 max-w-4xl">
       
@@ -48,8 +58,7 @@ if (!post) return Astro.redirect('/404');
 
     </div>
   </main>
-  <Footer />
-
+  
   <style is:global>
     /* 继承我们在产品详情页写过的漂亮银白色富文本样式 */
     .royal-rich-text { color: #d1d5db; line-height: 1.8; font-size: 1.125rem; }
@@ -60,4 +69,4 @@ if (!post) return Astro.redirect('/404');
     .royal-rich-text a { color: #D4AF37; text-decoration: underline; text-underline-offset: 4px; }
     .royal-rich-text img { border-radius: 1rem; margin-top: 2em; margin-bottom: 2em; }
   </style>
-</Layout>  
+</Layout>

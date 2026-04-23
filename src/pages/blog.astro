@@ -1,7 +1,7 @@
 ---
 // 文件：src/pages/blog.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
 import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
@@ -10,9 +10,18 @@ function urlFor(source) { return source ? builder.image(source).url() : ''; }
 
 // 核心：只抓取 postType == 'blog' 的文章
 const posts = await sanityClient.fetch(`*[_type == "post" && postType == "blog"] | order(publishedAt desc)`);
+
+// ✨ 新增：为行业博客聚合页硬编码专属的 B2B SEO 数据
+const pageTitle = "Bag Manufacturing Industry Blog & Supply Chain Insights | Royalbudd";
+const pageDesc = "Explore expert insights on bag manufacturing, global supply chain trends, zero-tariff strategies, and material innovations from Royalbudd's industry blog.";
+const pageKeywords = "bag manufacturing blog, supply chain insights, backpack OEM trends, bag factory news, textile material innovations, B2B bag supplier guide";
 ---
 
-<Layout title="Industry Blog - Royalbudd">
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={pageKeywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
     <div class="container mx-auto px-6 max-w-7xl">
       
@@ -41,5 +50,5 @@ const posts = await sanityClient.fetch(`*[_type == "post" && postType == "blog"]
 
     </div>
   </main>
-  <Footer />
-</Layout>
+  
+  </Layout>

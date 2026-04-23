@@ -1,10 +1,19 @@
 ---
 // 文件：src/pages/privacy.astro
 import Layout from '../layouts/Layout.astro';
-import Footer from '../components/Footer.astro';
+// 💡 已移除多余的 Footer 引入
+
+// ✨ 新增：为隐私政策页硬编码标准 SEO 数据，提升企业合规形象
+const pageTitle = "Privacy Policy & Data Protection | Royalbudd";
+const pageDesc = "Read Royalbudd's Privacy Policy. We are committed to safeguarding your corporate data, intellectual property, and tech packs across our global B2B bag manufacturing supply chain.";
+const pageKeywords = "privacy policy, B2B data protection, NDA bag manufacturer, Royalbudd privacy, OEM intellectual property protection";
 ---
 
-<Layout title="Privacy Policy - Royalbudd">
+<Layout 
+  title={pageTitle}
+  description={pageDesc}
+  keywords={pageKeywords}
+>
   <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
     <div class="container mx-auto px-6 max-w-4xl">
       
@@ -44,8 +53,7 @@ import Footer from '../components/Footer.astro';
 
     </div>
   </main>
-  <Footer />
-
+  
   <style is:global>
     /* 复用富文本排版样式 */
     .royal-rich-text { line-height: 1.8; font-size: 1rem; }
