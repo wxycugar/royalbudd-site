@@ -16,22 +16,22 @@ const data = await sanityClient.fetch(query);
     <div class="absolute inset-0 bg-gray-900/70 z-10"></div>
     
     <picture>
-      <source media="(max-width: 767px)" srcset="/hero-bg.webp" />
+    <source media="(max-width: 767px)" srcset="/hero-bg.webp" />
 
-      <img
-        src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
-        srcset={`
-          ${data.imageUrl}?fm=webp&q=80&w=800 800w,
-          ${data.imageUrl}?fm=webp&q=80&w=1200 1200w,
-          ${data.imageUrl}?fm=webp&q=80&w=1600 1600w
-        `}
-        sizes="(min-width: 768px) 100vw, 1200px"
-        fetchpriority="high"
-        loading="eager"
-        alt="Royalbudd Global Manufacturing Facility"
-        class="w-full h-full object-cover"
-      />
-    </picture>
+  <img
+    src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
+    srcset={`
+      ${data.imageUrl}?fm=webp&q=80&w=600 600w,
+      ${data.imageUrl}?fm=webp&q=80&w=800 800w,
+      ${data.imageUrl}?fm=webp&q=80&w=1200 1200w
+    `}
+    sizes="(min-width: 768px) 100vw, 1200px"
+    fetchpriority="high"
+    loading="eager"
+    alt="Royalbudd Global Manufacturing Facility"
+    class="w-full h-full object-cover"
+  />
+</picture>
   </div>
 
   <div class="relative z-20 container mx-auto px-6 md:px-12">
