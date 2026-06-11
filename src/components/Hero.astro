@@ -1,30 +1,35 @@
 ---
 // src/components/Hero.astro
 import { sanityClient } from "sanity:client";
+import { createImageUrlBuilder } from "@sanity/image-url";
+
+const builder = createImageUrlBuilder(sanityClient);
+function urlFor(source: any) { return source ? builder.image(source).auto('format') : null; }
 
 // 1. 查询语句：保留标题和电脑端图片的查询
 const query = `*[_type == "homePage"][0] {
   heroTitle,
-  "imageUrl": heroBackgroundImage.asset->url
+  heroBackgroundImage
 }`;
 
 const data = await sanityClient.fetch(query);
+const heroImg = data?.heroBackgroundImage ? urlFor(data.heroBackgroundImage) : null;
 ---
 
 <section class="relative bg-gray-900 text-white pt-24 pb-20 md:pt-32 md:pb-40 overflow-hidden">
   <div class="absolute inset-0 z-0">
     <div class="absolute inset-0 bg-gray-900/70 z-10"></div>
-    
+
     <picture>
     <source media="(max-width: 767px)" srcset="/hero-bg.webp" />
 
   <img
-    src={`${data.imageUrl}?fm=webp&q=80&w=1200`}
-    srcset={`
-      ${data.imageUrl}?fm=webp&q=80&w=600 600w,
-      ${data.imageUrl}?fm=webp&q=80&w=800 800w,
-      ${data.imageUrl}?fm=webp&q=80&w=1200 1200w
-    `}
+    src={heroImg?.width(1200).quality(80).url() ?? ''}
+    srcset={heroImg ? `
+      ${heroImg.width(600).quality(80).url()} 600w,
+      ${heroImg.width(800).quality(80).url()} 800w,
+      ${heroImg.width(1200).quality(80).url()} 1200w
+    ` : ''}
     sizes="(min-width: 768px) 100vw, 1200px"
     fetchpriority="high"
     loading="eager"
