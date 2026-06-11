@@ -6,7 +6,7 @@ import imageUrlBuilder from "@sanity/image-url";
 // 1. 初始化 Sanity 图片解析器
 const builder = imageUrlBuilder(sanityClient);
 function urlFor(source) {
-  return builder.image(source);
+  return builder.image(source).auto('format');
 }
 
 // 2. 向后台发送请求，抓取 homePage 里的 coreCategories 数据

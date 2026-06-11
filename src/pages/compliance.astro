@@ -8,7 +8,7 @@ import { sanityClient } from "sanity:client";
 import imageUrlBuilder from "@sanity/image-url";
 
 const builder = imageUrlBuilder(sanityClient);
-function urlFor(source) { return source ? builder.image(source).url() : ''; }
+function urlFor(source) { return source ? builder.image(source).auto('format').url() : ''; }
 
 // 抓取后台数据
 const query = `*[_type == "compliancePage"][0]`;

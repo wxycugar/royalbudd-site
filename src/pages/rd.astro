@@ -10,7 +10,7 @@ import imageUrlBuilder from "@sanity/image-url";
 const builder = imageUrlBuilder(sanityClient);
 // 安全的图片解析函数：如果没有传图，就不会报错
 function urlFor(source) {
-  return source ? builder.image(source).url() : '';
+  return source ? builder.image(source).auto('format').url() : '';
 }
 
 // 1. 抓取后台数据 (抓取 _type 为 rdPage 的那篇唯一文档)
