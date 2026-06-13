@@ -1,0 +1,312 @@
+---
+// 文件：src/pages/products/[...page].astro
+// 功能：统一服务端分页控制器
+// - /products          → 所有产品第 1 页
+// - /products/2        → 所有产品第 N 页
+// - /products/backpacks     → 对应分类第 1 页
+// - /products/backpacks/2   → 对应分类第 N 页
+
+import Layout from '../../layouts/Layout.astro';
+import { sanityClient } from "sanity:client";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(sanityClient);
+function urlFor(source) { return builder.image(source).auto('format'); }
+
+const PAGE_SIZE = 12;
+
+// —————————————————————————————————————————————————————————————————————————————
+// 1. URL 解析：将 [...page] 参数拆解为 (分类标识, 页码)
+// —————————————————————————————————————————————————————————————————————————————
+const raw = Astro.params.page;          // undefined | "2" | "backpacks" | "backpacks/2"
+const segments = raw ? raw.split('/').filter(Boolean) : [];
+
+let catSlug = null;   // null = 显示全部分类
+let pageNum = 1;
+
+if (segments.length === 0) {
+  // /products — 全部分类第一页
+  pageNum = 1;
+} else if (segments.length === 1) {
+  if (/^\d+$/.test(segments[0])) {
+    // /products/2 — 全部分类第 N 页
+    pageNum = parseInt(segments[0], 10);
+  } else {
+    // /products/backpacks — 分类第一页
+    catSlug = segments[0];
+  }
+} else {
+  // /products/backpacks/2
+  catSlug = segments[0];
+  pageNum = parseInt(segments[1], 10) || 1;
+}
+
+// —————————————————————————————————————————————————————————————————————————————
+// 2. 抓取数据
+// —————————————————————————————————————————————————————————————————————————————
+const categories = await sanityClient.fetch(`*[_type == "category"] | order(_createdAt asc)`);
+
+let allProducts;
+if (catSlug) {
+  allProducts = await sanityClient.fetch(
+    `*[_type == "product" && category->value == $catSlug] | order(_createdAt desc) { ..., category->{title, value} }`,
+    { catSlug }
+  );
+} else {
+  allProducts = await sanityClient.fetch(
+    `*[_type == "product"] | order(_createdAt desc) { ..., category->{title, value} }`
+  );
+}
+
+// —————————————————————————————————————————————————————————————————————————————
+// 3. 分页计算
+// —————————————————————————————————————————————————————————————————————————————
+const totalProducts = allProducts.length;
+const totalPages = Math.max(1, Math.ceil(totalProducts / PAGE_SIZE));
+pageNum = Math.max(1, Math.min(pageNum, totalPages));
+
+const start = (pageNum - 1) * PAGE_SIZE;
+const pageProducts = allProducts.slice(start, start + PAGE_SIZE);
+
+// 辅助函数：构建页码链接
+function pageUrl(n) {
+  if (catSlug) {
+    if (n <= 1) return `/products/${catSlug}`;
+    return `/products/${catSlug}/${n}`;
+  }
+  if (n <= 1) return '/products';
+  return `/products/${n}`;
+}
+
+// 当前分类对象（用于 SEO 标题）
+const currentCategory = catSlug
+  ? categories.find(c => c.value === catSlug)
+  : null;
+
+const seoTitle = currentCategory
+  ? `${currentCategory.title} - Royalbudd`
+  : 'Product Collection - Royalbudd';
+
+// 预计算分页按钮：哪些页码需要显示，哪些需要省略号
+const paginationButtons = [];
+for (let n = 1; n <= totalPages; n++) {
+  const show =
+    n === 1 ||
+    n === totalPages ||
+    Math.abs(n - pageNum) <= 2;
+  if (show) {
+    paginationButtons.push({ type: 'page', num: n });
+  } else if (
+    paginationButtons.length > 0 &&
+    paginationButtons[paginationButtons.length - 1].type !== 'ellipsis'
+  ) {
+    paginationButtons.push({ type: 'ellipsis', num: null });
+  }
+}
+
+// —————————————————————————————————————————————————————————————————————————————
+// 4. getStaticPaths — 构建所有静态路径
+// —————————————————————————————————————————————————————————————————————————————
+export async function getStaticPaths() {
+  const PAGE_SIZE = 12;
+  const [allCats, allProds] = await Promise.all([
+    sanityClient.fetch(`*[_type == "category"] | order(_createdAt asc)`),
+    sanityClient.fetch(`*[_type == "product"] | order(_createdAt desc) { ..., category->{title, value} }`),
+  ]);
+
+  const catValues = allCats.map(c => c.value);
+  const paths = [];
+
+  // 4a. 全部分类分页
+  const mainTotal = Math.ceil(allProds.length / PAGE_SIZE);
+  for (let i = 1; i <= Math.max(mainTotal, 1); i++) {
+    paths.push({
+      params: { page: i === 1 ? undefined : String(i) },
+    });
+  }
+
+  // 4b. 每个分类的分页
+  for (const catVal of catValues) {
+    const catProds = allProds.filter(p => p.category?.value === catVal);
+    const catTotal = Math.ceil(catProds.length / PAGE_SIZE);
+    for (let i = 1; i <= Math.max(catTotal, 1); i++) {
+      paths.push({
+        params: { page: i === 1 ? catVal : `${catVal}/${i}` },
+      });
+    }
+  }
+
+  return paths;
+}
+---
+
+<Layout title={seoTitle}>
+  <main class="bg-[#0a0a0a] min-h-screen pt-32 pb-24">
+    <div class="container mx-auto px-6 max-w-7xl">
+
+      <!-- 顶部标题区 -->
+      <div class="max-w-3xl mb-12">
+        {currentCategory ? (
+          <>
+            <h1 class="text-5xl font-black text-white mb-6 tracking-tighter uppercase">
+              <span class="text-[#D4AF37]">{currentCategory.title}</span>
+            </h1>
+            <p class="text-gray-500 text-lg leading-relaxed">Browse our {currentCategory.title.toLowerCase()} collection. Engineered for performance and durability.</p>
+          </>
+        ) : (
+          <>
+            <h1 class="text-5xl font-black text-white mb-6 tracking-tighter uppercase">Engineered for <br/><span class="text-[#D4AF37]">Execution.</span></h1>
+            <p class="text-gray-500 text-lg leading-relaxed">Explore our high-performance bag collection. Select a category below to filter our engineering solutions.</p>
+          </>
+        )}
+      </div>
+
+      <!-- 分类筛选导航 — 全部改为原生 <a> 链接 -->
+      <div class="flex flex-wrap gap-4 mb-16 border-b border-gray-900 pb-6" id="filter-container">
+        <a
+          href="/products"
+          class={`px-6 py-2 rounded-full border text-xs font-bold uppercase tracking-widest transition-all ${
+            !catSlug
+              ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
+              : 'border-gray-800 bg-[#111111] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37]'
+          }`}
+        >
+          All Products
+        </a>
+
+        {categories.map(cat => (
+          <a
+            href={`/products/${cat.value}`}
+            class={`px-6 py-2 rounded-full border text-xs font-bold uppercase tracking-widest transition-all ${
+              catSlug === cat.value
+                ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
+                : 'border-gray-800 bg-[#111111] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37]'
+            }`}
+          >
+            {cat.title}
+          </a>
+        ))}
+      </div>
+
+      <!-- 产品网格 -->
+      {pageProducts.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid">
+          {pageProducts.map(item => (
+            <a href={`/products/p/${item.slug.current}`}
+               class="product-card group bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden hover:border-[#D4AF37]/50 transition-all duration-500 block">
+
+              <div class="aspect-square p-8 flex items-center justify-center relative bg-gradient-to-b from-gray-900/40 to-transparent">
+                {item.mainImage ? (
+                  <img
+    src={builder.image(item.mainImage).width(800).auto('format').quality(80).url()}
+    srcset={`
+      ${builder.image(item.mainImage).width(400).auto('format').quality(80).url()} 400w,
+      ${builder.image(item.mainImage).width(800).auto('format').quality(80).url()} 800w
+    `}
+    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    loading="lazy"
+    alt={item.title}
+    class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
+  />
+                ) : (
+                  <div class="text-gray-700 text-sm">No Image</div>
+                )}
+                <div class="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm p-3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <svg class="w-5 h-5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
+              </div>
+
+              <div class="p-8 border-t border-gray-900 bg-[#0d0d0d]">
+                <div class="mb-4">
+                  <span class="text-xs font-black text-gray-600 uppercase tracking-widest mb-2 block">{item.category?.title || 'General'}</span>
+                  <h3 class="text-xl font-bold text-white group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">{item.title}</h3>
+                </div>
+                <div class="flex justify-between items-end mt-8 border-t border-gray-800/50 pt-4">
+                  <div>
+                    <span class="text-gray-500 text-[10px] uppercase font-bold tracking-widest block mb-1">Target Price</span>
+                    <span class="text-[#D4AF37] font-black text-xl">{item.price || 'Inquire'}</span>
+                  </div>
+                  <div class="text-right">
+                     <span class="text-gray-500 text-[10px] uppercase font-bold tracking-widest block mb-1">MOQ</span>
+                     <span class="text-white font-bold text-sm bg-gray-900 px-3 py-1 rounded-lg border border-gray-800">{item.moq || '300 Pcs'}</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-20">
+          <svg class="w-16 h-16 text-gray-800 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+          <h3 class="text-xl font-bold text-gray-500">No products found in this category.</h3>
+        </div>
+      )}
+
+      <!-- 分页导航条 -->
+      {totalPages > 1 && (
+        <nav class="mt-20 flex items-center justify-center gap-3" aria-label="Pagination">
+          <!-- 上一页 -->
+          {pageNum > 1 ? (
+            <a
+              href={pageUrl(pageNum - 1)}
+              class="px-5 py-3 rounded-xl border border-gray-800 bg-[#111111] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all text-sm font-bold"
+            >
+              ← Prev
+            </a>
+          ) : (
+            <span class="px-5 py-3 rounded-xl border border-gray-800/30 bg-transparent text-gray-700 text-sm font-bold cursor-not-allowed">
+              ← Prev
+            </span>
+          )}
+
+          <!-- 页码按钮 -->
+          {paginationButtons.map(btn =>
+            btn.type === 'ellipsis' ? (
+              <span class="px-2 text-gray-600">···</span>
+            ) : btn.num === pageNum ? (
+              <span class="w-11 h-11 flex items-center justify-center rounded-xl bg-[#D4AF37] text-black font-black text-sm">
+                {btn.num}
+              </span>
+            ) : (
+              <a
+                href={pageUrl(btn.num)}
+                class="w-11 h-11 flex items-center justify-center rounded-xl border border-gray-800 bg-[#111111] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all text-sm font-bold"
+              >
+                {btn.num}
+              </a>
+            )
+          )}
+
+          <!-- 下一页 -->
+          {pageNum < totalPages ? (
+            <a
+              href={pageUrl(pageNum + 1)}
+              class="px-5 py-3 rounded-xl border border-gray-800 bg-[#111111] text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all text-sm font-bold"
+            >
+              Next →
+            </a>
+          ) : (
+            <span class="px-5 py-3 rounded-xl border border-gray-800/30 bg-transparent text-gray-700 text-sm font-bold cursor-not-allowed">
+              Next →
+            </span>
+          )}
+        </nav>
+      )}
+
+      <!-- 分页信息（SEO 友好） -->
+      {totalPages > 1 && (
+        <p class="text-center text-gray-700 text-xs mt-6 tracking-wider">
+          {catSlug ? `Category: ${catSlug}` : 'All Products'} — Page {pageNum} of {totalPages} ({totalProducts} products)
+        </p>
+      )}
+
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
