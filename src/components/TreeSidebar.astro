@@ -1,0 +1,307 @@
+---
+// 文件：src/components/TreeSidebar.astro
+// 功能：双端自适应树状分类组件
+// - PC：左侧 260px 固定宽度的垂直树状列表
+// - 移动端：隐藏侧边栏，底部浮动「🔍 Filter By Categories」按钮 → 全屏抽屉
+
+import { sanityClient } from "sanity:client";
+
+export interface Props {
+  currentCatSlug?: string | null;
+  currentSubCatSlug?: string | null;
+}
+
+const { currentCatSlug = null, currentSubCatSlug = null } = Astro.props;
+
+// —————————————————————————————————————————————————————————————————————————————
+// 1. 从 Sanity 获取分类和产品的 subCategory 数据
+// —————————————————————————————————————————————————————————————————————————————
+const categories = await sanityClient.fetch(
+  `*[_type == "category"] | order(_createdAt asc) { title, value }`
+);
+
+// 只抓取那些有 subCategory 的产品，用于构建树
+const subData = await sanityClient.fetch(
+  `*[_type == "product" && defined(subCategory)]{ subCategory, "catVal": category->value }`
+);
+
+// —————————————————————————————————————————————————————————————————————————————
+// 2. 构建「分类 → 子分类」树
+// —————————————————————————————————————————————————————————————————————————————
+// subMap: { categoryValue: [unique subCategory strings] }
+const subMap = {};
+for (const item of subData) {
+  if (!item.catVal || !item.subCategory) continue;               // ⚠️ 双层空值保护
+  if (!subMap[item.catVal]) subMap[item.catVal] = [];
+  // 去重
+  if (!subMap[item.catVal].includes(item.subCategory)) {
+    subMap[item.catVal].push(item.subCategory);
+  }
+}
+
+// —————————————————————————————————————————————————————————————————————————————
+// 3. Slug 化辅助函数
+// —————————————————————————————————————————————————————————————————————————————
+function slugify(str: string): string {
+  if (!str) return '';
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+---
+
+<!-- ============ PC 侧边栏 (lg 以上) ============ -->
+<aside class="hidden lg:block w-[260px] flex-shrink-0">
+  <div class="sticky top-32">
+    <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6">
+      🗂 Categories
+    </h3>
+
+    <nav class="space-y-1">
+      <!-- 「全部产品」入口 -->
+      <a
+        href="/products"
+        class={`block px-3 py-2 rounded-lg text-sm font-bold transition-all ${
+          !currentCatSlug
+            ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30'
+            : 'text-gray-400 hover:text-white hover:bg-[#111111] border border-transparent'
+        }`}
+      >
+        All Products
+      </a>
+
+      {categories.map((cat) => {
+        const subs = subMap[cat.value] || [];
+        const hasSubCategories = subs.length > 0;
+        const isActiveCat = currentCatSlug === cat.value;
+
+        // — 没有子分类 → 普通 <a> 链接 —
+        if (!hasSubCategories) {
+          return (
+            <a
+              href={`/products/${cat.value}`}
+              class={`block px-3 py-2 rounded-lg text-sm font-bold transition-all ${
+                isActiveCat
+                  ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30'
+                  : 'text-gray-400 hover:text-white hover:bg-[#111111] border border-transparent'
+              }`}
+            >
+              {cat.title}
+            </a>
+          );
+        }
+
+        // — 有子分类 → <details> 可折叠节点 —
+        // 如果当前分类被选中, 默认展开
+        return (
+          <details class="group" open={isActiveCat}>
+            <summary
+              class={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-bold cursor-pointer transition-all list-none ${
+                isActiveCat
+                  ? 'bg-[#D4AF37]/10 text-[#D4AF37]'
+                  : 'text-gray-400 hover:text-white hover:bg-[#111111]'
+              }`}
+            >
+              <span>{cat.title}</span>
+              {/* 折叠箭头 — 仅在存在子分类时显示 */}
+              {hasSubCategories && (
+                <svg
+                  class="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-90 text-gray-600"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+            </summary>
+
+            {/* 子分类列表 */}
+            <div class="ml-3 mt-1 border-l border-gray-800 pl-3 space-y-1">
+              <a
+                href={`/products/${cat.value}`}
+                class={`block px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                  isActiveCat && !currentSubCatSlug
+                    ? 'text-[#D4AF37] bg-[#D4AF37]/5'
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-[#111111]'
+                }`}
+              >
+                — All {cat.title}
+              </a>
+              {subs.map((sub) => {
+                const subSlug = slugify(sub);
+                const isActiveSub = currentSubCatSlug === subSlug;
+                return (
+                  <a
+                    href={`/products/${cat.value}/${subSlug}`}
+                    class={`block px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      isActiveSub
+                        ? 'text-[#D4AF37] bg-[#D4AF37]/5'
+                        : 'text-gray-500 hover:text-gray-300 hover:bg-[#111111]'
+                    }`}
+                  >
+                    {sub}
+                  </a>
+                );
+              })}
+            </div>
+          </details>
+        );
+      })}
+    </nav>
+  </div>
+</aside>
+
+<!-- ============ 移动端：底部浮动打开抽屉按钮 ============ -->
+<button
+  id="filterDrawerBtn"
+  class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40
+         px-6 py-3.5 rounded-full bg-[#D4AF37] text-black font-black text-xs uppercase tracking-widest
+         shadow-[0_8px_30px_rgba(212,175,55,0.35)]
+         hover:-translate-y-0.5 transition-all
+         flex items-center gap-2"
+  onclick="document.getElementById('categoryDrawer').showModal()"
+>
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+  </svg>
+  Filter By Categories
+</button>
+
+<!-- ============ 移动端：全屏抽屉 dialog ============ -->
+<dialog
+  id="categoryDrawer"
+  class="fixed inset-0 z-50 m-0 h-full w-full max-w-full max-h-full
+         bg-[#0a0a0a]/95 backdrop-blur-xl border-0
+         open:flex flex-col
+         transition-all duration-300 ease-out
+         translate-x-[-100%] open:translate-x-0"
+  onclick="if (event.target === this) this.close()"
+>
+  <!-- 抽屉头部 -->
+  <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-900">
+    <h3 class="text-sm font-black text-white uppercase tracking-[0.2em]">
+      🗂 Categories
+    </h3>
+    <button
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-900 text-gray-400 hover:text-white transition-colors"
+      onclick="document.getElementById('categoryDrawer').close()"
+      aria-label="Close categories"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- 抽屉内容（与桌面完全相同的树） -->
+  <nav class="flex-1 overflow-y-auto px-6 py-6 space-y-1">
+    <a
+      href="/products"
+      class={`block px-3 py-3 rounded-lg text-sm font-bold transition-all ${
+        !currentCatSlug
+          ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30'
+          : 'text-gray-400 hover:text-white hover:bg-gray-900 border border-transparent'
+      }`}
+      onclick="document.getElementById('categoryDrawer').close()"
+    >
+      All Products
+    </a>
+
+    {categories.map((cat) => {
+      const subs = subMap[cat.value] || [];
+      const hasSubCategories = subs.length > 0;
+      const isActiveCat = currentCatSlug === cat.value;
+
+      if (!hasSubCategories) {
+        return (
+          <a
+            href={`/products/${cat.value}`}
+            class={`block px-3 py-3 rounded-lg text-sm font-bold transition-all ${
+              isActiveCat
+                ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30'
+                : 'text-gray-400 hover:text-white hover:bg-gray-900 border border-transparent'
+            }`}
+            onclick="document.getElementById('categoryDrawer').close()"
+          >
+            {cat.title}
+          </a>
+        );
+      }
+
+      return (
+        <details class="group" open={isActiveCat}>
+          <summary
+            class={`flex items-center justify-between px-3 py-3 rounded-lg text-sm font-bold cursor-pointer transition-all list-none ${
+              isActiveCat
+                ? 'bg-[#D4AF37]/10 text-[#D4AF37]'
+                : 'text-gray-400 hover:text-white hover:bg-gray-900'
+            }`}
+          >
+            <span>{cat.title}</span>
+            <svg
+              class="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-90 text-gray-600"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </summary>
+          <div class="ml-4 mt-1 border-l border-gray-800 pl-3 space-y-1">
+            <a
+              href={`/products/${cat.value}`}
+              class={`block px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+                isActiveCat && !currentSubCatSlug
+                  ? 'text-[#D4AF37] bg-[#D4AF37]/5'
+                  : 'text-gray-500 hover:text-gray-300 hover:bg-gray-900'
+              }`}
+              onclick="document.getElementById('categoryDrawer').close()"
+            >
+              — All {cat.title}
+            </a>
+            {subs.map((sub) => {
+              const subSlug = slugify(sub);
+              const isActiveSub = currentSubCatSlug === subSlug;
+              return (
+                <a
+                  href={`/products/${cat.value}/${subSlug}`}
+                  class={`block px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+                    isActiveSub
+                      ? 'text-[#D4AF37] bg-[#D4AF37]/5'
+                      : 'text-gray-500 hover:text-gray-300 hover:bg-gray-900'
+                  }`}
+                  onclick="document.getElementById('categoryDrawer').close()"
+                >
+                  {sub}
+                </a>
+              );
+            })}
+          </div>
+        </details>
+      );
+    })}
+  </nav>
+</dialog>
+
+<!-- ============ 抽屉 CSS：slide-in 动画 ============ -->
+<style is:global>
+  #categoryDrawer {
+    transition: transform 0.3s ease-out;
+    transform: translateX(-100%);
+  }
+  #categoryDrawer[open] {
+    transform: translateX(0);
+  }
+  /* 移除 dialog 原生 backdrop */
+  #categoryDrawer::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  /* 移除 <details> 默认三角箭头 */
+  #categoryDrawer summary::marker,
+  #categoryDrawer summary::-webkit-details-marker {
+    display: none;
+    content: '';
+  }
+  /* 移除 PC 侧边栏 details 默认三角箭头 */
+  .category-sidebar summary::marker,
+  .category-sidebar summary::-webkit-details-marker {
+    display: none;
+    content: '';
+  }
+</style>
