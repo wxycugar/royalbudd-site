@@ -1,0 +1,225 @@
+---
+// 文件：src/pages/request-audit.astro
+// 验厂与视频看厂落地页 —— 为全球品牌买家提供供应链透明度入口
+import Layout from '../layouts/Layout.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+---
+
+<Layout
+  title="Request Factory Audit & Live Tour | Royalbudd Bag Manufacturing"
+  description="Schedule an on-site factory audit or live Zoom tour of our China, Indonesia, and Bangladesh manufacturing bases. Full supply chain transparency for global buyers."
+  keywords="factory audit, factory tour, supplier audit, China factory visit, Indonesia manufacturing, Bangladesh manufacturing, OEM audit, bag factory tour"
+>
+  <main class="bg-[#0a0a0a] min-h-screen">
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="relative pt-32 pb-20 md:pb-28 overflow-hidden border-b border-gray-900">
+      <!-- Backdrop glow -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-[#D4AF37]/5 blur-[140px] rounded-full pointer-events-none"></div>
+
+      <div class="container mx-auto px-6 relative z-10 text-center">
+        <!-- Eyebrow -->
+        <span class="inline-block py-1.5 px-4 border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] text-[10px] font-black tracking-[0.3em] uppercase rounded-full mb-8">
+          Full Supply Chain Transparency
+        </span>
+
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 tracking-tighter leading-tight max-w-4xl mx-auto uppercase">
+          Request Factory Audit <span class="text-[#D4AF37]">&amp;</span> Live Tour
+        </h1>
+
+        <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          Royalbudd opens its doors fully — from raw material sourcing to final QC. We welcome global buyers,
+          third-party auditors, and compliance teams to inspect every stage of our supply chain.
+          <strong class="text-white">No hidden corners. No black boxes.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== DUE DILIGENCE + FORM SECTION ===== -->
+    <section class="py-20 md:py-28">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-20">
+
+          <!-- ===== LEFT: Due Diligence Info (3/5 width on desktop) ===== -->
+          <div class="lg:col-span-3">
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+              We Support Every Layer of<br class="hidden sm:block" />
+              <span class="text-[#D4AF37]">Due Diligence</span>
+            </h2>
+            <div class="w-16 h-1 bg-[#D4AF37] mb-10"></div>
+
+            <!-- Item 1 -->
+            <div class="flex gap-5 mb-10 group">
+              <div class="flex-shrink-0 mt-1 w-7 h-7 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-xl mb-2">On-Site Factory Audits</h3>
+                <p class="text-gray-400 leading-relaxed">
+                  Welcome your internal team or designated third-party inspectors to physically audit our
+                  manufacturing bases in <strong class="text-white">Jiangmen (China)</strong>,
+                  <strong class="text-white">Indonesia</strong>, and <strong class="text-white">Bangladesh</strong>.
+                  Full access to production lines, QC documentation, and worker welfare facilities.
+                </p>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="flex gap-5 mb-10 group">
+              <div class="flex-shrink-0 mt-1 w-7 h-7 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-xl mb-2">Live Zoom Factory Tours</h3>
+                <p class="text-gray-400 leading-relaxed">
+                  For overseas buyers unable to travel, we offer real-time video walkthroughs of our
+                  sewing lines, cutting workshops, and 100% final inspection SOP. Point your camera
+                  anywhere — if it's on the floor, you'll see it.
+                </p>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="flex gap-5 mb-10 group">
+              <div class="flex-shrink-0 mt-1 w-7 h-7 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-white font-bold text-xl mb-2">Vendor Onboarding Support</h3>
+                <p class="text-gray-400 leading-relaxed">
+                  On request, we provide factory equipment lists, capacity reports, and quality baseline
+                  documentation to fast-track your vendor onboarding process. No endless email chains —
+                  just the facts you need to make a confident decision.
+                </p>
+              </div>
+            </div>
+
+            <!-- Trust indicator -->
+            <div class="mt-12 p-6 bg-[#111111] border border-gray-800 rounded-2xl">
+              <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white font-semibold text-sm">Your inquiry is confidential</p>
+                  <p class="text-gray-500 text-sm">All audit requests are handled by our compliance team directly. No third parties.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== RIGHT: Web3Forms Request Form (2/5 width on desktop) ===== -->
+          <div class="lg:col-span-2">
+            <div class="bg-[#111111] border border-gray-800 rounded-2xl p-8 sticky top-32">
+              <h3 class="text-2xl font-black text-white mb-2">Submit Your Request</h3>
+              <p class="text-gray-500 text-sm mb-8">Fill in the form and our team will follow up within 24 hours.</p>
+
+              <form action="https://api.web3forms.com/submit" method="POST">
+
+                <!-- Web3Forms Access Key — replace with your actual key -->
+                <!-- TODO: Replace YOUR_ACCESS_KEY_HERE with your Web3Forms access key -->
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+
+                <!-- Honeypot (anti-spam) -->
+                <input type="checkbox" name="botcheck" class="hidden" style="display:none;" />
+
+                <!-- Company Name -->
+                <div class="mb-5">
+                  <label for="company" class="block text-gray-300 text-sm font-semibold mb-2 uppercase tracking-wider">Company Name <span class="text-[#D4AF37]">*</span></label>
+                  <input
+                    type="text"
+                    id="company"
+                    name="company"
+                    required
+                    placeholder="Your company name"
+                    class="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all duration-200 text-sm"
+                  />
+                </div>
+
+                <!-- Work Email -->
+                <div class="mb-5">
+                  <label for="email" class="block text-gray-300 text-sm font-semibold mb-2 uppercase tracking-wider">Work Email <span class="text-[#D4AF37]">*</span></label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="you@company.com"
+                    class="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all duration-200 text-sm"
+                  />
+                </div>
+
+                <!-- Preferred Audit Mode -->
+                <div class="mb-5">
+                  <label for="audit_mode" class="block text-gray-300 text-sm font-semibold mb-2 uppercase tracking-wider">Preferred Audit Mode</label>
+                  <select
+                    id="audit_mode"
+                    name="audit_mode"
+                    class="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg py-3.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all duration-200 text-sm appearance-none"
+                    style="background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23D4AF37%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;"
+                  >
+                    <option value="" disabled selected>Select an audit mode</option>
+                    <option value="Live Zoom Video Tour">Book a Live Zoom Video Tour</option>
+                    <option value="3rd-Party On-Site Audit">Schedule a 3rd-Party On-Site Audit</option>
+                    <option value="Request Factory Documents First">Request Factory Documents First</option>
+                  </select>
+                </div>
+
+                <!-- Target Production Base -->
+                <div class="mb-5">
+                  <label for="production_base" class="block text-gray-300 text-sm font-semibold mb-2 uppercase tracking-wider">Target Production Base</label>
+                  <select
+                    id="production_base"
+                    name="production_base"
+                    class="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg py-3.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all duration-200 text-sm appearance-none"
+                    style="background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23D4AF37%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;"
+                  >
+                    <option value="" disabled selected>Select a production base</option>
+                    <option value="Indonesia Base (Tariff-Free for US)">Indonesia Base (Tariff-Free for US)</option>
+                    <option value="Bangladesh Base (Duty-Free for EU)">Bangladesh Base (Duty-Free for EU)</option>
+                    <option value="Jiangmen China Base">Jiangmen China Base</option>
+                  </select>
+                </div>
+
+                <!-- Message / Requirements -->
+                <div class="mb-6">
+                  <label for="message" class="block text-gray-300 text-sm font-semibold mb-2 uppercase tracking-wider">Message / Requirements</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    placeholder="Estimated order quantity, specific product requirements, or any questions you'd like us to address..."
+                    class="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg py-3.5 px-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all duration-200 text-sm resize-vertical"
+                  ></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                  type="submit"
+                  class="w-full bg-[#D4AF37] text-gray-900 font-bold py-4 px-10 rounded-lg hover:bg-[#C5A028] transition duration-300 shadow-lg text-base tracking-wide uppercase"
+                >
+                  Submit Request
+                </button>
+
+                <p class="text-gray-600 text-xs text-center mt-4">
+                  Your information is protected under our <a href="/privacy" class="text-[#D4AF37] underline hover:text-[#C5A028]">Privacy Policy</a>.
+                </p>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <FinalCTA />
+  </main>
+</Layout>
