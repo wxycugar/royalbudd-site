@@ -14,14 +14,9 @@
     </p>
 
     <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a href="mailto:sales@royalbudd.com" class="bg-black text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-900 transition-all shadow-xl hover:-translate-y-1">
+      <button id="openQuoteBtn" class="bg-black text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-900 transition-all shadow-xl hover:-translate-y-1 cursor-pointer">
         Request a Quote Now
-      </a>
-      
-      <a href="/company-profile.pdf" target="_blank" class="border-2 border-black text-black px-10 py-4 rounded-full font-bold text-lg hover:bg-black hover:text-[#D4AF37] transition-all flex items-center justify-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-        Download Company Profile (PDF)
-      </a>
+      </button>
     </div>
 
     <p class="mt-8 text-black/60 text-sm font-semibold uppercase tracking-widest">
@@ -29,3 +24,159 @@
     </p>
   </div>
 </section>
+
+<!-- 询盘表单弹窗 (Modal Dialog) -->
+<dialog id="quoteDialog" class="fixed inset-0 z-50 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl bg-white p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm open:scale-100 transition-all">
+  <div class="relative p-8">
+    <!-- 关闭按钮 -->
+    <button id="closeQuoteBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors cursor-pointer" type="button">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+
+    <h3 class="text-2xl font-bold text-gray-900 mb-2">Request a Quote</h3>
+    <p class="text-gray-500 text-sm mb-6">Fill out the form and we'll get back to you within 12 hours.</p>
+
+    <form action="https://api.web3forms.com/submit" method="POST" id="quoteForm">
+
+      <!-- Web3Forms 必需字段 -->
+      <input type="hidden" name="access_key" value="322fd0d9-be5f-4416-97a1-ffdf8365af21" />
+
+      <!-- Honeypot 防垃圾字段（对用户不可见） -->
+      <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <div class="space-y-4">
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
+          <input type="text" name="name" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Country <span class="text-red-500">*</span></label>
+          <input type="text" name="country" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Company <span class="text-red-500">*</span></label>
+          <input type="text" name="company" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Phone/WhatsApp <span class="text-red-500">*</span></label>
+          <input type="tel" name="phone" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+          <input type="email" name="email" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Message</label>
+          <textarea name="message" rows="4"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm resize-none"></textarea>
+        </div>
+
+        <!-- 纯前端 Math CAPTCHA 验证 -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Enter these numbers to verify you're human:
+            <span id="captchaDisplay" class="inline-block ml-2 px-3 py-1 bg-gray-200 rounded-md font-mono text-lg font-bold tracking-widest select-all"></span>
+          </label>
+          <input type="text" id="captchaInput" required autocomplete="off"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] outline-none transition text-sm"
+            placeholder="Enter the numbers above" />
+          <p id="captchaError" class="text-red-500 text-xs mt-1 hidden">Incorrect code. Please try again.</p>
+        </div>
+
+        <button type="submit" id="submitBtn"
+          class="w-full bg-black text-white px-6 py-4 rounded-full font-bold text-lg hover:bg-gray-900 transition-all shadow-xl hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+          Send Message
+        </button>
+
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  (function() {
+    const dialog = document.getElementById('quoteDialog');
+    const openBtn = document.getElementById('openQuoteBtn');
+    const closeBtn = document.getElementById('closeQuoteBtn');
+    const form = document.getElementById('quoteForm');
+    const captchaDisplay = document.getElementById('captchaDisplay');
+    const captchaInput = document.getElementById('captchaInput');
+    const captchaError = document.getElementById('captchaError');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let captchaValue = 0;
+
+    // 生成随机 3 位数验证码
+    function generateCaptcha() {
+      captchaValue = Math.floor(100 + Math.random() * 900);
+      if (captchaDisplay) {
+        captchaDisplay.textContent = captchaValue;
+      }
+      if (captchaInput) {
+        captchaInput.value = '';
+      }
+      if (captchaError) {
+        captchaError.classList.add('hidden');
+      }
+    }
+
+    // 打开弹窗
+    if (openBtn) {
+      openBtn.addEventListener('click', function() {
+        generateCaptcha();
+        if (dialog) dialog.showModal();
+      });
+    }
+
+    // 关闭弹窗
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        if (dialog) dialog.close();
+        if (captchaError) captchaError.classList.add('hidden');
+      });
+    }
+
+    // 点击弹窗外背景关闭
+    if (dialog) {
+      dialog.addEventListener('click', function(e) {
+        if (e.target === dialog) {
+          dialog.close();
+          if (captchaError) captchaError.classList.add('hidden');
+        }
+      });
+    }
+
+    // 按 ESC 键关闭时重置
+    if (dialog) {
+      dialog.addEventListener('close', function() {
+        captchaError.classList.add('hidden');
+      });
+    }
+
+    // 表单提交时验证 CAPTCHA
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        const userInput = captchaInput ? captchaInput.value.trim() : '';
+        if (parseInt(userInput, 10) !== captchaValue) {
+          e.preventDefault();
+          if (captchaError) captchaError.classList.remove('hidden');
+          if (captchaInput) {
+            captchaInput.focus();
+            captchaInput.value = '';
+          }
+        }
+      });
+    }
+  })();
+</script>
