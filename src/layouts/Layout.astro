@@ -8,6 +8,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro'; // <--- 臣帮您把丢失的页脚找回来了
 import StickyCTA from '../components/StickyCTA.astro';
+import QuoteModal from '../components/QuoteModal.astro';
 
 // ✨ 新增：定义 Layout 能够接收的 SEO 属性 (用问号代表可选，页面不传也不会报错)
 interface Props {
@@ -62,6 +63,8 @@ const {
         <Footer />
         
         <StickyCTA />
+
+        <QuoteModal />
         
     </body>
 </html>
